@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import org.bouncycastle.operator.OperatorCreationException;
@@ -48,4 +49,14 @@ public class TestController {
 		return ResponseEntity.ok(testService.decodeCSR(csr));
 	}
 
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/generate-root")
+	public ResponseEntity<String> generateRoot() throws Exception {
+		testService.generateRootCertificate();
+		return ResponseEntity.ok("NAPRAVLJEN");
+	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr")
+	public ResponseEntity<String> signCsr() throws Exception {
+		return ResponseEntity.ok(testService.signCSR().toString());
+	}
 }
