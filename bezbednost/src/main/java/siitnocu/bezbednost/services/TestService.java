@@ -108,7 +108,9 @@ public class TestService implements ITestService{
 		// TODO Auto-generated method stub
 		PKCS10CertificationRequest csr = CSRHandler.convertPemToPKCS10CertificationRequest(csrString);
         X500Name x500Name = csr.getSubject();
-
+        
+        //csr.getSubjectPublicKeyInfo().getPublicKey()
+        
         String[] csrDecoded = x500Name.toString().split(",");
         CertificateInfo ci = new CertificateInfo();
         ci.setEmail(csrDecoded[0].split("=")[1]);
