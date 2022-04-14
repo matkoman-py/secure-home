@@ -42,8 +42,8 @@ public class KeyStoreService {
     	
     	KeyPair keyPairIssuer = generateKeyPair();
     	
-    	SubjectData subjectData = generateSubjectData(keyPairIssuer.getPublic());
-        IssuerData issuerData = generateIssuerData(keyPairIssuer.getPrivate());
+    	SubjectData subjectData = generateSubjectDataForRoot(keyPairIssuer.getPublic());
+        IssuerData issuerData = generateIssuerDataForRoot(keyPairIssuer.getPrivate());
         
         CertificateGenerator cg = new CertificateGenerator();
         X509Certificate cert = cg.generateCertificate(subjectData, issuerData);
@@ -52,7 +52,7 @@ public class KeyStoreService {
         keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
     }
     
-    private IssuerData generateIssuerData(PrivateKey issuerKey) {
+    private IssuerData generateIssuerDataForRoot(PrivateKey issuerKey) {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
         builder.addRDN(BCStyle.CN, "Alkeksandar Cepic");
         builder.addRDN(BCStyle.SURNAME, "Aleksandar");
@@ -71,7 +71,7 @@ public class KeyStoreService {
         return new IssuerData(issuerKey, builder.build());
     }
 
-    private SubjectData generateSubjectData(PublicKey publicKey) {
+    private SubjectData generateSubjectDataForRoot(PublicKey publicKey) {
         try {
             // Datumi od kad do kad vazi sertifikat
             SimpleDateFormat iso8601Formater = new SimpleDateFormat("yyyy-MM-dd");

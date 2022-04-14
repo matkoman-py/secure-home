@@ -1,9 +1,13 @@
 package siitnocu.bezbednost.controllers;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
+import java.text.ParseException;
+
 import org.bouncycastle.operator.OperatorCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import siitnocu.bezbednost.data.SubjectData;
 import siitnocu.bezbednost.services.TestService;
 import siitnocu.bezbednost.utils.CertificateInfo;
 
@@ -42,15 +47,15 @@ public class TestController {
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/decode")
-	public ResponseEntity<CertificateInfo> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException {
+	public ResponseEntity<SubjectData> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException {
 		return ResponseEntity.ok(testService.decodeCSR(csr));
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/generate-root")
-	public ResponseEntity<String> generateRoot() throws Exception {
-		testService.generateRootCertificate();
-		return ResponseEntity.ok("NAPRAVLJEN");
-	}
+//	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/generate-root")
+//	public ResponseEntity<String> generateRoot() throws Exception {
+//		testService.generateRootCertificate();
+//		return ResponseEntity.ok("NAPRAVLJEN");
+//	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr")
 	public ResponseEntity<String> signCsr() throws Exception {
