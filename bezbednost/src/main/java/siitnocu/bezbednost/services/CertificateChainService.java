@@ -1,5 +1,9 @@
 package siitnocu.bezbednost.services;
 
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.springframework.stereotype.Service;
 import javax.security.auth.x500.X500Principal;
 import java.security.KeyPair;
@@ -88,11 +92,19 @@ public class CertificateChainService {
     public static X509Certificate getIssuer(X509Certificate subject,
             Collection<X509Certificate> certs) {
         for (X509Certificate cert : certs) {
-            if (cert.getSubjectX500Principal().equals(
-                    subject.getIssuerX500Principal())) {
-                if (isSignedBy(subject, cert.getPublicKey())) {
-                    return cert;
-                }
+
+
+            X500Name x500nameSubject = new X500Name( cert.getSubjectX500Principal().getName() );
+            RDN cnSubject = x500nameSubject.getRDNs(BCStyle.CN)[0];
+
+            X500Name x500nameIssuer = new X500Name( subject.getIssuerX500Principal().getName() );
+            RDN cnIssuer = x500nameIssuer.getRDNs(BCStyle.CN)[0];
+
+            System.out.println("ISSUER " + IETFUtils.valueToString(cnIssuer.getFirst().getValue()));
+            System.out.println("SUBJECT U LISTI "  + IETFUtils.valueToString(cnSubject.getFirst().getValue()));
+            if (IETFUtils.valueToString(cnSubject.getFirst().getValue()).equals(
+                    IETFUtils.valueToString(cnIssuer.getFirst().getValue()))) {
+                return cert;
             }
         }
 
@@ -175,6 +187,6 @@ public class CertificateChainService {
             out = chain;
         }
 
-        return Collections.unmodifiableList(out);
+        return out;
     }
 }

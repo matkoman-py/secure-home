@@ -145,9 +145,7 @@ public class KeyStoreService {
         Enumeration<String> enumeration = ks.aliases();
         while(enumeration.hasMoreElements()) {
             String alias = enumeration.nextElement();
-            System.out.println("alias name: " + alias);
             java.security.cert.X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
-            System.out.println(certificate.toString());
             certificates.add(certificate);
         }
 

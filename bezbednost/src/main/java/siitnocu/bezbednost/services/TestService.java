@@ -133,13 +133,19 @@ public class TestService implements ITestService{
 		CertificateGenerator cg = new CertificateGenerator();
 		X509Certificate generatedCert = cg.generateCertificate(subjectData, issuerData);
 		
-//		X509Certificate[] chain = new X509Certificate[2];
-//		chain[0]=generatedCert;
-//		chain[1]=cert;
-																		   //PUBLIC KEY, ALL CERTS
-		X509Certificate[] chain = (X509Certificate[]) certificateChainService.buildChainFor(cert.getPublicKey(), keyStoreService.getAllCertificatesObjects()).toArray();
-		
+		X509Certificate[] chain = new X509Certificate[1];
+		chain[0]=generatedCert;
 		keyStoreWriterService.write(KEY_STORE, generatedCert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
+		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
+
+
+		//PUBLIC KEY, ALL CERTS
+		List<X509Certificate> chainList = certificateChainService.buildChainFor(generatedCert.getPublicKey(), keyStoreService.getAllCertificatesObjects());
+		Collections.reverse(chainList);
+		X509Certificate[] chainArray = new X509Certificate[chainList.size()];
+		chainList.toArray(chainArray);
+
+		keyStoreWriterService.write(KEY_STORE, generatedCert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chainArray);
 		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
 
 		return "Uspesno potpisan!";
