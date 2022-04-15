@@ -132,4 +132,25 @@ public class KeyStoreService {
 
         return certificates;
     }
+    
+    public List<X509Certificate> getAllCertificatesObjects() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+        List<X509Certificate> certificates = new ArrayList<>();
+        KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+        // ucitavamo podatke
+        File file = new File(KEY_STORE);
+        InputStream is = new FileInputStream(file);
+        ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+
+        Enumeration<String> enumeration = ks.aliases();
+        while(enumeration.hasMoreElements()) {
+            String alias = enumeration.nextElement();
+            System.out.println("alias name: " + alias);
+            java.security.cert.X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+            System.out.println(certificate.toString());
+            certificates.add(certificate);
+        }
+
+        return certificates;
+    }
 }
