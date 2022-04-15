@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import siitnocu.bezbednost.services.KeyStoreService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/key-store")
 public class KeyStoreController {
@@ -23,5 +25,10 @@ public class KeyStoreController {
 	public ResponseEntity<String> generateRoot() throws Exception {
 		keyStoreService.createNewSelfSignedCertificate();
 		return ResponseEntity.ok("NAPRAVLJEN");
+	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-certificates")
+	public ResponseEntity<List<String>> getAllCertificates() throws Exception {
+		return ResponseEntity.ok(keyStoreService.getAllCertificates());
 	}
 }

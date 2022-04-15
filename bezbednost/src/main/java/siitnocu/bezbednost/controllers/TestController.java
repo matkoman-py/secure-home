@@ -1,9 +1,7 @@
 package siitnocu.bezbednost.controllers;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
@@ -47,18 +45,13 @@ public class TestController {
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/decode")
-	public ResponseEntity<SubjectData> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException {
-		return ResponseEntity.ok(testService.decodeCSR(csr));
+	public ResponseEntity<String> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		return ResponseEntity.ok(testService.decodeCSR(csr).getSerialNumber());
 	}
 
-//	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/generate-root")
-//	public ResponseEntity<String> generateRoot() throws Exception {
-//		testService.generateRootCertificate();
-//		return ResponseEntity.ok("NAPRAVLJEN");
-//	}
-
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr")
-	public ResponseEntity<String> signCsr() throws Exception {
-		return ResponseEntity.ok(testService.signCSR().toString());
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr/{issuerAlias}")
+	public ResponseEntity<String> signCsr(@PathVariable("issuerAlias") String alias,
+										  @RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		return ResponseEntity.ok(testService.signCSR(csr, alias));
 	}
 }
