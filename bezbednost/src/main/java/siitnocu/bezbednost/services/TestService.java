@@ -58,7 +58,6 @@ import siitnocu.bezbednost.utils.CertificateInfo;
 @Transactional
 public class TestService implements ITestService{
 
-
 	private static final String KEY_STORE = "keystore.jks";
 	private static final String KEY_STORE_TYPE = "PKCS12";
 	private static final String KEY_STORE_PASSWORD = "pass";
@@ -68,6 +67,9 @@ public class TestService implements ITestService{
 		
 	}
 
+	@Autowired
+	private CertificateChainService certificateChainService;
+	
 	@Autowired
 	private KeyStoreReaderService keyStoreReaderService;
 
@@ -131,10 +133,12 @@ public class TestService implements ITestService{
 		CertificateGenerator cg = new CertificateGenerator();
 		X509Certificate generatedCert = cg.generateCertificate(subjectData, issuerData);
 
-		X509Certificate[] chain = new X509Certificate[2];
-		chain[0]=generatedCert;
-		chain[1]=cert;
-
+//		X509Certificate[] chain = new X509Certificate[2];
+//		chain[0]=generatedCert;
+//		chain[1]=cert;
+																		   //PUBLIC KEY, ALL CERTS
+		List<X509Certificate> chain = certificateChainService.buildChainFor(null, null);
+		
 		keyStoreWriterService.write(KEY_STORE, generatedCert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
 		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
 
