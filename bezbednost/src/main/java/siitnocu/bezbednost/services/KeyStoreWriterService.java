@@ -13,21 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class KeyStoreWriterService {
 
-    public void createKeyStore(char[] password) {
-        try {
-            KeyStore ks = KeyStore.getInstance("JKS", "SUN");
-
-            // Ako je cilj kreirati novi KeyStore poziva se i dalje load, pri cemu je prvi parametar null
-            ks.load(null, password);
-        } catch (NoSuchAlgorithmException | CertificateException | IOException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void saveKeyStore(String fileName, char[] password) {
         try {
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
@@ -51,6 +36,26 @@ public class KeyStoreWriterService {
 //            ks.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
             ks.setKeyEntry(alias, privateKey, password, certificate);
 
+            ks.store(new FileOutputStream(fileName), password);
+        } catch (KeyStoreException | NoSuchProviderException | FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCertificate(String fileName, String alias, char[] password) {
+        try {
+            KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+            // ucitavamo podatke
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileName));
+            ks.load(in, password);
+            ks.deleteEntry(alias);
             ks.store(new FileOutputStream(fileName), password);
         } catch (KeyStoreException | NoSuchProviderException | FileNotFoundException e) {
             e.printStackTrace();

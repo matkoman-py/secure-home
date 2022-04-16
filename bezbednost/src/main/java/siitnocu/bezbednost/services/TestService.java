@@ -17,9 +17,11 @@ import javax.security.auth.x500.X500Principal;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.asn1.x509.*;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -48,8 +50,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import siitnocu.bezbednost.certificates.CertificateGenerator;
+import siitnocu.bezbednost.data.DeletedCertificate;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
+import siitnocu.bezbednost.repositories.DeletedCertificateRepository;
 import siitnocu.bezbednost.utils.CSRHandler;
 import siitnocu.bezbednost.utils.CertificateInfo;
 
@@ -78,6 +82,9 @@ public class TestService implements ITestService{
 
 	@Autowired
 	private KeyStoreService keyStoreService;
+
+	@Autowired
+	private DeletedCertificateRepository deletedCertificateRepository;
 
 	@Override
 	public String generateCSR(CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException {
@@ -151,5 +158,58 @@ public class TestService implements ITestService{
 		return "Uspesno potpisan!";
 	}
 
+	public String revokeCertificate(String alias, String reason) throws KeyStoreException, NoSuchProviderException, IOException, CertificateException, NoSuchAlgorithmException {
+		X509Certificate cert = (X509Certificate) keyStoreReaderService.readCertificate(KEY_STORE, "pass", alias);
+		PrivateKey privateKey = keyStoreReaderService.readPrivateKey(KEY_STORE, "pass", alias, "pass");
+
+		keyStoreWriterService.deleteCertificate(KEY_STORE, alias, KEY_STORE_PASSWORD.toCharArray());
+		deletedCertificateRepository.save(new DeletedCertificate(alias, reason));
+
+		Queue<String> queue
+				= new LinkedList<String>();
+
+		X500Name x500nameSubject = new X500Name( cert.getSubjectX500Principal().getName() );
+		RDN cnSubject = x500nameSubject.getRDNs(BCStyle.CN)[0];
+		queue.add(IETFUtils.valueToString(cnSubject.getFirst().getValue()));
+
+		while(queue.size() != 0){
+			KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+			// ucitavamo podatke
+			File file = new File(KEY_STORE);
+			InputStream is = new FileInputStream(file);
+			ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+			Enumeration<String> enumeration = ks.aliases();
+			while(enumeration.hasMoreElements()) {
+				String aliasInlist = enumeration.nextElement();
+				X509Certificate certificate = (X509Certificate) ks.getCertificate(aliasInlist);
+
+				X500Name x500nameIssuer = new X500Name( certificate.getIssuerX500Principal().getName() );
+				RDN cnIssuer = x500nameIssuer.getRDNs(BCStyle.CN)[0];
+				if(IETFUtils.valueToString(cnIssuer.getFirst().getValue()).equals(queue.peek())){
+					X500Name x500nameSubjectDeep = new X500Name( certificate.getSubjectX500Principal().getName() );
+					RDN cnSubjectDeep = x500nameSubjectDeep.getRDNs(BCStyle.CN)[0];
+					queue.add(IETFUtils.valueToString(cnSubjectDeep.getFirst().getValue()));
+
+					keyStoreWriterService.deleteCertificate(KEY_STORE, aliasInlist, KEY_STORE_PASSWORD.toCharArray());
+					deletedCertificateRepository.save(new DeletedCertificate(aliasInlist, "Parent was deleted"));
+
+					X509Certificate[] chain = new X509Certificate[1];
+					chain[0]=certificate;
+					keyStoreWriterService.write("keystore-deleted.jks", aliasInlist, privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
+					keyStoreWriterService.saveKeyStore("keystore-deleted.jks", KEY_STORE_PASSWORD.toCharArray());
+				}
+			}
+			queue.poll();
+		}
+
+
+
+		X509Certificate[] chain = new X509Certificate[1];
+		chain[0]=cert;
+		keyStoreWriterService.write("keystore-deleted.jks", cert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
+		keyStoreWriterService.saveKeyStore("keystore-deleted.jks", KEY_STORE_PASSWORD.toCharArray());
+
+		return "Revoke successful!";
+	}
 }
 
