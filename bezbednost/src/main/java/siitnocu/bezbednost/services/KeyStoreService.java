@@ -30,6 +30,7 @@ public class KeyStoreService {
 	
 	@Autowired
 	private KeyStoreReaderService keyStoreReaderService;
+	
     @Autowired
 	private KeyStoreWriterService keyStoreWriterService;
 	
@@ -127,6 +128,25 @@ public class KeyStoreService {
             java.security.cert.Certificate certificate = ks.getCertificate(alias);
             System.out.println(certificate.toString());
             certificates.add("alias name: " + alias);
+        }
+
+        return certificates;
+    }
+    
+    public List<X509Certificate> getAllCertificatesObjects() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+        List<X509Certificate> certificates = new ArrayList<>();
+        KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+        // ucitavamo podatke
+        File file = new File(KEY_STORE);
+        InputStream is = new FileInputStream(file);
+        ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+
+        Enumeration<String> enumeration = ks.aliases();
+        while(enumeration.hasMoreElements()) {
+            String alias = enumeration.nextElement();
+            java.security.cert.X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+            certificates.add(certificate);
         }
 
         return certificates;
