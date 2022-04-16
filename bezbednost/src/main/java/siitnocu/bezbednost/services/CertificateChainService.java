@@ -89,10 +89,9 @@ public class CertificateChainService {
         return isSignedBy(certificate, certificate.getPublicKey());
     }
     
-    public static X509Certificate getIssuer(X509Certificate subject,
-            Collection<X509Certificate> certs) {
+    public static X509Certificate getIssuer(X509Certificate subject, Collection<X509Certificate> certs) {
+    	
         for (X509Certificate cert : certs) {
-
 
             X500Name x500nameSubject = new X500Name( cert.getSubjectX500Principal().getName() );
             RDN cnSubject = x500nameSubject.getRDNs(BCStyle.CN)[0];
