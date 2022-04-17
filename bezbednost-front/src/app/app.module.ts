@@ -6,18 +6,22 @@ import { AppComponent } from './app.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
-import {TableModule} from 'primeng/table';
-import {ButtonModule} from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
-
-
 
 @NgModule({
   declarations: [
     AppComponent,
     CertificateComponent,
     NavbarComponent,
-    CertificateInfoComponent
+    GenerateCsrComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +29,12 @@ import { CertificateInfoComponent } from './certificate-info/certificate-info.co
     HttpClientModule,
     MenubarModule,
     TableModule,
-    ButtonModule
+    InputTextModule,
+    FormsModule,
+    CardModule,
+    ButtonModule,
+    ToastModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
