@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import siitnocu.bezbednost.data.CertificateDTO;
 import siitnocu.bezbednost.services.KeyStoreService;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class KeyStoreController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-certificates")
-	public ResponseEntity<List<String>> getAllCertificates() throws Exception {
+	public ResponseEntity<List<CertificateDTO>> getAllCertificates() throws Exception {
 		return ResponseEntity.ok(keyStoreService.getAllCertificates());
 	}
 	

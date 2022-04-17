@@ -1,9 +1,11 @@
 package siitnocu.bezbednost.services;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,10 +17,12 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import siitnocu.bezbednost.certificates.CertificateGenerator;
+import siitnocu.bezbednost.data.CertificateDTO;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
 
@@ -113,8 +117,8 @@ public class KeyStoreService {
         return null;
     }
     
-    public List<String> getAllCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
-        List<String> certificates = new ArrayList<>();
+    public List<CertificateDTO> getAllCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+        List<CertificateDTO> certificates = new ArrayList<>();
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
 
         // ucitavamo podatke
@@ -125,10 +129,18 @@ public class KeyStoreService {
         Enumeration<String> enumeration = ks.aliases();
         while(enumeration.hasMoreElements()) {
             String alias = enumeration.nextElement();
-            System.out.println("alias name: " + alias);
-            java.security.cert.Certificate certificate = ks.getCertificate(alias);
-            System.out.println(certificate.toString());
-            certificates.add("alias name: " + alias);
+            X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+            String subjectDomainName = certificate.getSubjectDN().getName();
+            String issuerDomainName = certificate.getIssuerDN().getName();
+            String sigAlgName = certificate.getSigAlgName();
+            int serial = certificate.getSerialNumber().intValue();
+            RSAPublicKey rsaPk = (RSAPublicKey) certificate.getPublicKey();
+            int keySize = rsaPk.getModulus().bitLength();
+            Date dateTo = certificate.getNotAfter();
+            Date dateFrom = certificate.getNotBefore();
+            int version = certificate.getVersion();
+
+            certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial));
         }
 
         return certificates;

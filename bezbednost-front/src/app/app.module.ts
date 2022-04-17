@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
+import {TableModule} from 'primeng/table';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { MenubarModule } from 'primeng/menubar';
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,
+    TableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
