@@ -21,7 +21,8 @@ import { CertificateInfoComponent } from './certificate-info/certificate-info.co
     AppComponent,
     CertificateComponent,
     NavbarComponent,
-    GenerateCsrComponent
+    GenerateCsrComponent,
+    CertificateInfoComponent
   ],
   imports: [
     BrowserModule,

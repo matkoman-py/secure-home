@@ -12,7 +12,6 @@ import { GenerateCsrService } from './services/generate-csr.service';
 export class GenerateCsrComponent implements OnInit {
 
   csrInfo: csrCreateDTO = {};
-  kurac: string = "";
 
   constructor(private generateCsrService: GenerateCsrService,
               private messageService: MessageService) { }
