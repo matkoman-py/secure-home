@@ -9,7 +9,6 @@ import { CertificateDTO } from '../model/certificate';
 })
 export class CertificateComponent implements OnInit {
   
-
   certificates: CertificateDTO[] = [];
   constructor(private certificateService: CertificateService) { }
 
@@ -20,7 +19,4 @@ export class CertificateComponent implements OnInit {
       this.certificates = res;
     })
   }
-
-
-
 }

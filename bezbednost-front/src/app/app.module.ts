@@ -12,6 +12,12 @@ import { CertificateInfoComponent } from './certificate-info/certificate-info.co
 import { CsrComponent } from './csr/csr.component';
 import { DialogModule } from 'primeng/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { CardModule } from 'primeng/card';
+import { ToastModule } from 'primeng/toast';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,6 +25,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavbarComponent,
     CertificateInfoComponent,
     CsrComponent,
+    GenerateCsrComponent,
+    CertificateInfoComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -29,6 +37,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TableModule,
     ButtonModule,
     DialogModule,
+    InputTextModule,
+    FormsModule,
+    CardModule,
+    ToastModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

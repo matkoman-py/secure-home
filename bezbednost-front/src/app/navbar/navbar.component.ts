@@ -18,6 +18,11 @@ export class NavbarComponent implements OnInit {
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/csr',
     },
+    {
+      label: 'Generate CSR',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/generate-csr',
+    },
   ];
 
   constructor() {}

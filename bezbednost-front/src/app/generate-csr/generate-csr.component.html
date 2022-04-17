@@ -1,0 +1,43 @@
+<p-toast position="top-center" key="tc"></p-toast>
+<p-card>
+  <h2>Create CSR</h2>
+  <div class="col card special2">
+    <div class="p-formgroup-inline search">
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.domainName" placeholder="Domain name" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.organizationName" placeholder="Organization name" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.organizationUnit" placeholder="Organization unit" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.city" placeholder="City" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.state" placeholder="State" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.country" placeholder="Country" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.email" placeholder="Email" />
+      </div>
+      <br>
+      <div class="p-field">
+        <input type="text" pInputText [(ngModel)]="csrInfo.reason" placeholder="Reason" />
+      </div>
+      <br>
+      <div class="p-field">
+        <p-button label="Submit" (onClick)="generateCsr()" [disabled]="!isInfoValid()"></p-button>
+      </div>
+    </div>
+  </div>
+</p-card>
