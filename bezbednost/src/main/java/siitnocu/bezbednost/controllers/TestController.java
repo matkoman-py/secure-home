@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import extensions.CertificateExtensions;
+import siitnocu.bezbednost.certificates.CSRExtensions;
 import siitnocu.bezbednost.data.SubjectData;
 import siitnocu.bezbednost.services.TestService;
 import siitnocu.bezbednost.utils.CertificateInfo;
@@ -40,7 +41,7 @@ public class TestController {
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> getAll(@RequestBody CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException {
+	public ResponseEntity<String> getAll(@RequestBody CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.generateCSR(csrInfo));
 	}
 	
@@ -48,10 +49,20 @@ public class TestController {
 	public ResponseEntity<String> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.decodeCSR(csr).getSerialNumber());
 	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/best")
+	public ResponseEntity<CSRExtensions> getThise() throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		CSRExtensions csr= new CSRExtensions();
+		CertificateExtensions ce = new CertificateExtensions();
+		ce.setBCCrit(true);
+		csr.setExtensions(new CertificateExtensions());
+		return ResponseEntity.ok(csr);
+	}
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr/{issuerAlias}")
 	public ResponseEntity<String> signCsr(@PathVariable("issuerAlias") String alias,
-										  @RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+										  @RequestBody CSRExtensions csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		System.out.println(csr.getCsr());
 		return ResponseEntity.ok(testService.signCSR(csr, alias));
 	}
 }

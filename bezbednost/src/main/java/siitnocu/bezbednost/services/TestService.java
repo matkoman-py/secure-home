@@ -47,6 +47,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import extensions.CertificateExtensions;
+import siitnocu.bezbednost.certificates.CSRExtensions;
 import siitnocu.bezbednost.certificates.CertificateGenerator;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
@@ -80,8 +82,10 @@ public class TestService implements ITestService{
 	private KeyStoreService keyStoreService;
 
 	@Override
-	public String generateCSR(CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException {
+	public String generateCSR(CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException, NoSuchProviderException {
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+
 		kpg.initialize(2048);
 		KeyPair pair = kpg.generateKeyPair();
 		String info = "CN="+csrInfo.getDomainName()+", O="+csrInfo.getOrganizationName()+", OU="+csrInfo.getOrganizationUnit()+", L="+csrInfo.getCity()+", S="+csrInfo.getState()+", C="+csrInfo.getCountry()+", EMAIL="+csrInfo.getEmail();
@@ -120,18 +124,17 @@ public class TestService implements ITestService{
 	}
 
 	@Override
-	public String signCSR(String csr, String alias) throws ParseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
-		SubjectData subjectData = decodeCSR(csr);
+	public String signCSR(CSRExtensions csr, String alias) throws ParseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		SubjectData subjectData = decodeCSR(csr.getCsr());
 		PrivateKey privateKey = keyStoreReaderService.readPrivateKey(KEY_STORE, "pass", alias, "pass");
 		X509Certificate cert = (X509Certificate) keyStoreReaderService.readCertificate(KEY_STORE, "pass", alias);
-
 		X500Principal principal = cert.getSubjectX500Principal();
 		X500Name x500name = new X500Name( principal.getName() );
 
 		IssuerData issuerData = new IssuerData(privateKey, x500name);
 
 		CertificateGenerator cg = new CertificateGenerator();
-		X509Certificate generatedCert = cg.generateCertificate(subjectData, issuerData);
+		X509Certificate generatedCert = cg.generateCertificate(subjectData, issuerData, csr.getExtensions());
 		
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0]=generatedCert;

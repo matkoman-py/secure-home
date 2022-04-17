@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,14 +35,14 @@ public class KeyStoreService {
     @Autowired
 	private KeyStoreWriterService keyStoreWriterService;
 	
-    public void createNewSelfSignedCertificate() throws FileNotFoundException {
+    public void createNewSelfSignedCertificate() throws IOException, NoSuchAlgorithmException {
     	KeyPair keyPairIssuer = generateKeyPair();
     	
     	SubjectData subjectData = generateSubjectDataForRoot(keyPairIssuer.getPublic());
         IssuerData issuerData = generateIssuerDataForRoot(keyPairIssuer.getPrivate());
         
         CertificateGenerator cg = new CertificateGenerator();
-        X509Certificate cert = cg.generateCertificate(subjectData, issuerData);
+        X509Certificate cert = cg.generateCertificate(subjectData, issuerData, null);
 
         X509Certificate[] chain = new X509Certificate[1];
         chain[0]=cert;
