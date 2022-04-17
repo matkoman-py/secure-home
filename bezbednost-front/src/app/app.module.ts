@@ -9,6 +9,8 @@ import { MenubarModule } from 'primeng/menubar';
 import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
+import {InputTextModule} from 'primeng/inputtext';
+
 
 
 
@@ -25,7 +27,8 @@ import { CertificateInfoComponent } from './certificate-info/certificate-info.co
     HttpClientModule,
     MenubarModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

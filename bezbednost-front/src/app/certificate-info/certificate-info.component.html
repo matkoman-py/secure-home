@@ -1,1 +1,58 @@
-<p>certificate-info works!</p>
+<div class="center">
+<!-- Your HTML code goes right here -->
+    <p>Version:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.version}}" disabled/>
+    <p>Subject:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.subjectName}}" disabled/>
+    <p>Issuer:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.issuerName}}" disabled/>
+    <p>Serial number:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.serialNo}}" disabled/>
+    <p>Valid from:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.startDate}}" disabled/>
+    <p>Valid To:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.expirationDate}}" disabled/>
+    <p>Public key:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.format}}  {{certificate.keySize}} bit" disabled/>
+    <p>Signature algorithm:</p>
+    <input type="text" pInputText style="width: 100%;" value="{{certificate.algorithm}}" disabled/>
+    <h1 style="text-align: center;">EXTENSIONS</h1>
+    <h2>Basic Constaints <span *ngIf="extensions.bccrit">(CRITICAL)</span></h2>
+    <p>Certificate is <span *ngIf="extensions.ca == -1">not</span> a CA</p>
+    <p>Path length: {{extensions.ca}}</p>
+    <div *ngIf="extensions.keyUsages.length > 0">
+      <h2>Key Usages <span *ngIf="extensions.kucrit">(CRITICAL)</span></h2>
+    <ul> 
+      <li *ngFor="let ku of extensions.keyUsages"> 
+        {{ ku }}
+      </li>
+    </ul>
+    </div>
+    <div *ngIf="extensions.extendedKeyUsages.length > 0">
+      <h2>Extended Key Usages <span *ngIf="extensions.ekucrit">(CRITICAL)</span></h2>
+      <ul> 
+        <li *ngFor="let eku of extensions.extendedKeyUsages"> 
+          {{ eku }}
+        </li>
+      </ul>
+    </div>
+  
+    <div *ngIf="extensions.subjectAlternativeNames.length > 0"> 
+      <h2>Subject Alternative Name <span *ngIf="extensions.ekucrit">(CRITICAL)</span></h2>
+      <ul> 
+        <li *ngFor="let san of extensions.subjectAlternativeNames"> 
+          {{ san }}
+        </li>
+      </ul>
+    </div>
+    
+    <div *ngIf="extensions.ski != null"> 
+      <h2>Subject Key identifier <span *ngIf="extensions.skicrit">(CRITICAL)</span></h2>
+      <p>{{extensions.ski}}</p>
+    </div> 
+    <div *ngIf="extensions.aki != null"> 
+      <h2>Authority Key identifier <span *ngIf="extensions.akicrit">(CRITICAL)</span></h2>
+    <p>{{extensions.aki}}</p>
+    </div> 
+    
+  </div>
