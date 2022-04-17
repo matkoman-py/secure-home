@@ -51,9 +51,11 @@ import org.springframework.transaction.annotation.Transactional;
 import extensions.CertificateExtensions;
 import siitnocu.bezbednost.certificates.CSRExtensions;
 import siitnocu.bezbednost.certificates.CertificateGenerator;
+import siitnocu.bezbednost.data.CsrInfo;
 import siitnocu.bezbednost.data.DeletedCertificate;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
+import siitnocu.bezbednost.repositories.CsrInfoRepository;
 import siitnocu.bezbednost.repositories.DeletedCertificateRepository;
 import siitnocu.bezbednost.utils.CSRHandler;
 import siitnocu.bezbednost.utils.CertificateInfo;
@@ -61,7 +63,7 @@ import siitnocu.bezbednost.utils.CertificateInfo;
 
 @Service
 @Transactional
-public class TestService implements ITestService{
+public class TestService{
 
 	private static final String KEY_STORE = "keystore.jks";
 	private static final String KEY_STORE_TYPE = "PKCS12";
@@ -87,7 +89,9 @@ public class TestService implements ITestService{
 	@Autowired
 	private DeletedCertificateRepository deletedCertificateRepository;
 
-	@Override
+	@Autowired
+	private CsrInfoRepository csrInfoRepository;
+
 	public String generateCSR(CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException, NoSuchProviderException {
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
@@ -107,10 +111,22 @@ public class TestService implements ITestService{
 		pemWriter.close();
 		str.close();
 
+		CsrInfo csrInfo1 = new CsrInfo(
+			csrInfo.getDomainName(),
+				csrInfo.getOrganizationName(),
+				csrInfo.getOrganizationUnit(),
+				csrInfo.getCity(),
+				csrInfo.getState(),
+				csrInfo.getCountry(),
+				csrInfo.getEmail(),
+				str.toString(),
+				csrInfo.getReason()
+		);
+		csrInfoRepository.save(csrInfo1);
+
 		return str.toString();
 	}
 	
-	@Override
 	public SubjectData decodeCSR(String csrString) throws ParseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		// TODO Auto-generated method stub
 		PKCS10CertificationRequest csr = CSRHandler.convertPemToPKCS10CertificationRequest(csrString);
@@ -121,19 +137,34 @@ public class TestService implements ITestService{
 		Date startDate = iso8601Formater.parse("2021-12-31");
 		Date endDate = iso8601Formater.parse("2025-12-31");
 
-		JcaPKCS10CertificationRequest jcaPKCS10CertificationRequest = new JcaPKCS10CertificationRequest(csr);
+		//JcaPKCS10CertificationRequest jcaPKCS10CertificationRequest = new JcaPKCS10CertificationRequest(csr);
 
+		RSAKeyParameters pubkey =
+				(RSAKeyParameters)PublicKeyFactory.createKey(csr.getSubjectPublicKeyInfo());
+		RSAPublicKeySpec spec = new RSAPublicKeySpec(pubkey.getModulus(), pubkey.getExponent());
+		KeyFactory factory = KeyFactory.getInstance("RSA");
+		PublicKey pub = factory.generatePublic(spec);
 		// Serijski broj sertifikata
 		int sn = (keyStoreService.getAllCertificates().size() + 1);
 
-		return new SubjectData(jcaPKCS10CertificationRequest.getPublicKey(), x500Name, String.valueOf(sn), startDate, endDate);
+		return new SubjectData(pub, x500Name, String.valueOf(sn), startDate, endDate);
 	}
 
-	@Override
-	public String signCSR(CSRExtensions csr, String alias) throws ParseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
-		SubjectData subjectData = decodeCSR(csr.getCsr());
+	public String signCSR(CSRExtensions csr, String alias, String subjectDomainName) throws ParseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		Optional<CsrInfo> csrInfo = csrInfoRepository.findByDomainName(subjectDomainName);
+		if(csrInfo.isEmpty()){
+			return "There is no subject with the given domain name!";
+		}
+
+		SubjectData subjectData = decodeCSR(csrInfo.get().getCsrString());
 		PrivateKey privateKey = keyStoreReaderService.readPrivateKey(KEY_STORE, "pass", alias, "pass");
+
 		X509Certificate cert = (X509Certificate) keyStoreReaderService.readCertificate(KEY_STORE, "pass", alias);
+		System.out.println("EVOOO ME " + cert.getBasicConstraints());
+		if(cert.getBasicConstraints() == -1){
+			return "Issuer is not a CA!";
+		}
+
 		X500Principal principal = cert.getSubjectX500Principal();
 		X500Name x500name = new X500Name( principal.getName() );
 
@@ -144,9 +175,8 @@ public class TestService implements ITestService{
 		
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0]=generatedCert;
-		keyStoreWriterService.write(KEY_STORE, generatedCert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
+		keyStoreWriterService.write(KEY_STORE, subjectDomainName, privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
 		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
-
 
 		//PUBLIC KEY, ALL CERTS
 		List<X509Certificate> chainList = certificateChainService.buildChainFor(generatedCert.getPublicKey(), keyStoreService.getAllCertificatesObjects());
@@ -154,7 +184,7 @@ public class TestService implements ITestService{
 		X509Certificate[] chainArray = new X509Certificate[chainList.size()];
 		chainList.toArray(chainArray);
 
-		keyStoreWriterService.write(KEY_STORE, generatedCert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chainArray);
+		keyStoreWriterService.write(KEY_STORE, subjectDomainName, privateKey, KEY_STORE_PASSWORD.toCharArray(), chainArray);
 		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
 
 		return "Uspesno potpisan!";

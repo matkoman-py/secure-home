@@ -9,8 +9,9 @@ public class CertificateInfo {
 	private String state;
 	private String country;
 	private String email;
+	private String reason;
 	public CertificateInfo(String domainName, String organizationName, String organizationUnit, String city,
-			String state, String country, String email) {
+			String state, String country, String email, String reason) {
 		super();
 		this.domainName = domainName;
 		this.organizationName = organizationName;
@@ -19,6 +20,7 @@ public class CertificateInfo {
 		this.state = state;
 		this.country = country;
 		this.email = email;
+		this.reason = reason;
 	}
 	public CertificateInfo() {
 		super();
@@ -65,8 +67,12 @@ public class CertificateInfo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
 
+	public String getReason() {
+		return reason;
+	}
 
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
 }

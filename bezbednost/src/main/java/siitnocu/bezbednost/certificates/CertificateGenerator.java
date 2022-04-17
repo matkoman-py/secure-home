@@ -67,35 +67,44 @@ public class CertificateGenerator {
                     subjectData.getPublicKey());
             // Generise se sertifikat
             //VDE RADIM============================
-            
-            if(ext.getBasicConstraints() != null) {
-                certGen.addExtension(Extension.basicConstraints, ext.isBCCrit(), new BasicConstraints(ext.getBasicConstraints().isCa())); //GOTOVO            
+            if(ext == null){
+                MessageDigest md = MessageDigest.getInstance("SHA-1");
+                byte[] hash = md.digest(subjectData.getPublicKey().getEncoded());
+                certGen.addExtension(Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(hash));
+
+                certGen.addExtension(Extension.basicConstraints, false, new BasicConstraints(true));
+
+            }else{
+                if(ext.getBasicConstraints() != null) {
+                    certGen.addExtension(Extension.basicConstraints, ext.isBCCrit(), new BasicConstraints(ext.getBasicConstraints().isCa())); //GOTOVO
+                }
+                if(ext.getKeyUsage() != null) {
+                    if(ext.getKeyUsage().getKeyUsages().size() > 0) {
+                        certGen.addExtension(Extension.keyUsage, ext.isKUECrit(), new KeyUsage(ext.getKeyUsage().calculateKeyUsages()));
+                    }
+                }
+                if(ext.getExtendedKeyUsage() != null) {
+                    if(ext.getExtendedKeyUsage().getKeyPurposes().size() > 0) {
+                        certGen.addExtension(Extension.extendedKeyUsage, ext.isEKUCrit(), new ExtendedKeyUsage(ext.getExtendedKeyUsage().transform()));
+                    }
+                }
+                if(ext.getSubjectAlternativeName() != null) {
+                    if(ext.getSubjectAlternativeName().getNames().size() > 0) {
+                        certGen.addExtension(Extension.subjectAlternativeName, ext.isSANCrit(), ext.getSubjectAlternativeName().transform());
+                    }
+                }
+                if(ext.isSKIExt()) {
+                    MessageDigest md = MessageDigest.getInstance("SHA-1");
+                    byte[] hash = md.digest(subjectData.getPublicKey().getEncoded());
+                    certGen.addExtension(Extension.subjectKeyIdentifier, ext.isSKICrit(), new SubjectKeyIdentifier(hash)); //GOTOVO
+                }
+                if(ext.isAKIExt()) {
+                    SubjectPublicKeyInfo apki = new SubjectPublicKeyInfo((ASN1Sequence)new ASN1InputStream(subjectData.getPublicKey().getEncoded()).readObject());
+                    AuthorityKeyIdentifier aki = new AuthorityKeyIdentifier(apki);
+                    certGen.addExtension(Extension.authorityKeyIdentifier, ext.isAKICrit(), aki);
+                }
             }
-            if(ext.getKeyUsage() != null) {
-            	if(ext.getKeyUsage().getKeyUsages().size() > 0) {
-                    certGen.addExtension(Extension.keyUsage, ext.isKUECrit(), new KeyUsage(ext.getKeyUsage().calculateKeyUsages()));
-            	}
-            }
-            if(ext.getExtendedKeyUsage() != null) {
-            	if(ext.getExtendedKeyUsage().getKeyPurposes().size() > 0) {
-                	certGen.addExtension(Extension.extendedKeyUsage, ext.isEKUCrit(), new ExtendedKeyUsage(ext.getExtendedKeyUsage().transform()));
-            	}
-            }
-            if(ext.getSubjectAlternativeName() != null) {
-            	if(ext.getSubjectAlternativeName().getNames().size() > 0) {
-                    certGen.addExtension(Extension.subjectAlternativeName, ext.isSANCrit(), ext.getSubjectAlternativeName().transform());
-            	}
-            }
-            if(ext.isSKIExt()) {
-              MessageDigest md = MessageDigest.getInstance("SHA-1");
-              byte[] hash = md.digest(subjectData.getPublicKey().getEncoded());
-              certGen.addExtension(Extension.subjectKeyIdentifier, ext.isSKICrit(), new SubjectKeyIdentifier(hash)); //GOTOVO   
-            }
-            if(ext.isAKIExt()) {
-            	SubjectPublicKeyInfo apki = new SubjectPublicKeyInfo((ASN1Sequence)new ASN1InputStream(subjectData.getPublicKey().getEncoded()).readObject());
-              	AuthorityKeyIdentifier aki = new AuthorityKeyIdentifier(apki);
-     	   		certGen.addExtension(Extension.authorityKeyIdentifier, ext.isAKICrit(), aki);
-            }
+
             
   
 //            SubjectPublicKeyInfo apki = new SubjectPublicKeyInfo((ASN1Sequence)new ASN1InputStream(

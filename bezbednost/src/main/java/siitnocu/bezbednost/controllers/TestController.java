@@ -59,11 +59,11 @@ public class TestController {
 		return ResponseEntity.ok(csr);
 	}
 
-	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr/{issuerAlias}")
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr/{issuerAlias}/{subjectDomainName}")
 	public ResponseEntity<String> signCsr(@PathVariable("issuerAlias") String alias,
+										  @PathVariable("subjectDomainName") String subjectDomainName,
 										  @RequestBody CSRExtensions csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
-		System.out.println(csr.getCsr());
-		return ResponseEntity.ok(testService.signCSR(csr, alias));
+		return ResponseEntity.ok(testService.signCSR(csr, alias, subjectDomainName));
 	}
 
 	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/revoke-certificate/{alias}")

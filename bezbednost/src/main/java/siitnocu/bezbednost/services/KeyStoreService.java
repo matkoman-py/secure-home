@@ -164,33 +164,28 @@ public class KeyStoreService {
         
         java.security.cert.Certificate[] chain = ks.getCertificateChain(alias);
         
-        Date validFrom = new Date();
-        
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.YEAR, 5);
-        Date validTo = c.getTime();
-        
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        
-        System.out.println(validFrom);
-        System.out.println(validTo);
-        System.out.println();
-        
+        Date today = new Date();
+        int index = 0;
         for(java.security.cert.Certificate cert: chain) {
         	
-        	System.out.println("END DATE: " + ((X509Certificate) cert).getNotAfter());
-        	System.out.println("START DATE: " + ((X509Certificate) cert).getNotBefore());
-        	System.out.println();
+        	if(((X509Certificate) cert).getNotAfter().before(today)) {
+                return false;
+            }
+        	if(((X509Certificate) cert).getNotBefore().after(today)) return false;
+            try {
+                if(index + 1 == chain.length){
+                    cert.verify(cert.getPublicKey());
+                }
+                else{
+                    cert.verify(chain[index+1].getPublicKey());
+                    index++;
+                }
+            } catch (InvalidKeyException e) {
+                return false;
+            } catch (SignatureException e) {
+                return false;
+            }
 
-        	if(((X509Certificate) cert).getNotAfter().after(validTo)) return false;
-        	if(((X509Certificate) cert).getNotBefore().before(validFrom)) return false;
-      
         }
     	
     	return true;
