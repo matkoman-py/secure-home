@@ -72,3 +72,195 @@
     </p-table>
   </ng-template>
 </p-dialog>
+
+<p-dialog
+  header="Extensions"
+  [(visible)]="extenstionsModal"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '80vw', 'overflow-x': 'hidden' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <ng-template pTemplate="footer">
+    <h5>Basic constraint</h5>
+
+    <p-radioButton
+      name="city"
+      value="None"
+      [(ngModel)]="basicConstraint"
+      inputId="city1"
+    ></p-radioButton>
+    <label for="city1">None</label>
+    <p-radioButton
+      name="city"
+      value="Non-critical"
+      [(ngModel)]="basicConstraint"
+      inputId="city2"
+    ></p-radioButton>
+    <label for="city2">Non-critical</label>
+    <p-radioButton
+      name="city"
+      value="Critical"
+      [(ngModel)]="basicConstraint"
+      inputId="city3"
+    ></p-radioButton>
+    <label for="city3">Critical</label>
+    <br />
+    <p-radioButton
+      name="isCa"
+      value="true"
+      [(ngModel)]="basicConstraintIsCa"
+      inputId="isCa"
+    ></p-radioButton>
+    <label for="isCa">Is CA</label>
+    <p-radioButton
+      name="isNotCa"
+      value="false"
+      [(ngModel)]="basicConstraintIsCa"
+      inputId="isNotCa"
+    ></p-radioButton>
+    <label for="isNotCa">Is not CA</label>
+    <br />
+    <h5>Authority Key identifier</h5>
+    <p-radioButton
+      name="aki"
+      value="None"
+      [(ngModel)]="aki"
+      inputId="aki1"
+    ></p-radioButton>
+    <label for="aki1">None</label>
+    <p-radioButton
+      name="aki"
+      value="Non-critical"
+      [(ngModel)]="aki"
+      inputId="aki2"
+    ></p-radioButton>
+    <label for="aki2">Non-critical</label>
+    <p-radioButton
+      name="aki"
+      value="Critical"
+      [(ngModel)]="aki"
+      inputId="aki3"
+    ></p-radioButton>
+    <label for="aki3">Critical</label>
+    <br />
+    <h5>Subject Key identifier</h5>
+    <p-radioButton
+      name="ski"
+      value="None"
+      [(ngModel)]="ski"
+      inputId="ski1"
+    ></p-radioButton>
+    <label for="ski1">None</label>
+    <p-radioButton
+      name="ski"
+      value="Non-critical"
+      [(ngModel)]="ski"
+      inputId="ski2"
+    ></p-radioButton>
+    <label for="ski2">Non-critical</label>
+    <p-radioButton
+      name="ski"
+      value="Critical"
+      [(ngModel)]="ski"
+      inputId="ski3"
+    ></p-radioButton>
+    <label for="ski3">Critical</label>
+    <div>
+      <p-multiSelect
+        [options]="keyUsages"
+        [(ngModel)]="keyUsagesSelected"
+        optionLabel="name"
+      ></p-multiSelect>
+      <label for="name">Key usages</label>
+      <br />
+      <p-radioButton
+        name="aki"
+        value="Non-critical"
+        [(ngModel)]="criticalKeyUsage"
+        inputId="aki2"
+      ></p-radioButton>
+      <label for="aki2">Non-critical</label>
+      <p-radioButton
+        name="aki"
+        value="Critical"
+        [(ngModel)]="criticalKeyUsage"
+        inputId="aki3"
+      ></p-radioButton>
+      <label for="aki3">Critical</label>
+    </div>
+    <div>
+      <p-multiSelect
+        [options]="extendedKeyUsages"
+        [(ngModel)]="extendedKeyUsagesSelected"
+        optionLabel="name"
+      ></p-multiSelect>
+      <label for="name">Extended key usages</label>
+      <br />
+      <p-radioButton
+        name="aki"
+        value="Non-critical"
+        [(ngModel)]="criticalExtendedKeyUsage"
+        inputId="aki2"
+      ></p-radioButton>
+      <label for="aki2">Non-critical</label>
+      <p-radioButton
+        name="aki"
+        value="Critical"
+        [(ngModel)]="criticalExtendedKeyUsage"
+        inputId="aki3"
+      ></p-radioButton>
+      <label for="aki3">Critical</label>
+    </div>
+    <h5>Subject alternative name</h5>
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="ipAddress"
+      placeholder="IP address"
+    />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="directoryName"
+      placeholder="Directory name"
+    />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="dnsName"
+      placeholder="DNS name"
+    />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="rfc822"
+      placeholder="RFC 822 name"
+    />
+    <input type="text" pInputText [(ngModel)]="uri" placeholder="URI" />
+    <input type="text" pInputText [(ngModel)]="upn" placeholder="UPN" />
+    <br />
+    <p-radioButton
+      name="aki"
+      value="Non-critical"
+      [(ngModel)]="criticalSubjectAlternativeName"
+      inputId="aki2"
+    ></p-radioButton>
+    <label for="aki2">Non-critical</label>
+    <p-radioButton
+      name="aki"
+      value="Critical"
+      [(ngModel)]="criticalSubjectAlternativeName"
+      inputId="aki3"
+    ></p-radioButton>
+    <label for="aki3">Critical</label>
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Sign csr"
+      class="p-button-success"
+      (click)="signCSR()"
+    ></button>
+  </ng-template>
+</p-dialog>

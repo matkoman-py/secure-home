@@ -6,3 +6,8 @@ export interface CsrDTO {
   email: string;
   reason: string;
 }
+
+export interface KeyUsages {
+  name: string;
+  code: Number;
+}

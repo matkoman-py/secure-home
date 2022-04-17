@@ -17,10 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
-
-
-
-
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { MultiSelectModule } from 'primeng/multiselect';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +42,8 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     CardModule,
     ToastModule,
-
+    RadioButtonModule,
+    MultiSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
