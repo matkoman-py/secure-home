@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import siitnocu.bezbednost.services.KeyStoreService;
@@ -30,5 +31,10 @@ public class KeyStoreController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-certificates")
 	public ResponseEntity<List<String>> getAllCertificates() throws Exception {
 		return ResponseEntity.ok(keyStoreService.getAllCertificates());
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/check-certificate-validity/{alias}")
+	public ResponseEntity<Boolean> isCertificateValid(@PathVariable("alias") String alias) throws Exception {
+		return ResponseEntity.ok(keyStoreService.isCertificateValid(alias));
 	}
 }

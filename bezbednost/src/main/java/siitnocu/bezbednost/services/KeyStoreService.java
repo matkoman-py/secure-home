@@ -6,11 +6,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.text.ParseException;
 import java.util.List;
-
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -150,5 +150,48 @@ public class KeyStoreService {
         }
 
         return certificates;
+    }
+    
+    public boolean isCertificateValid(String alias) throws KeyStoreException, NoSuchProviderException, NoSuchAlgorithmException, CertificateException, IOException {
+    	KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+        File file = new File(KEY_STORE);
+        InputStream is = new FileInputStream(file);
+        ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+        
+        if(ks.getCertificate(alias) == null) return false;
+        
+        java.security.cert.Certificate[] chain = ks.getCertificateChain(alias);
+        
+        Date validFrom = new Date();
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.YEAR, 5);
+        Date validTo = c.getTime();
+        
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        
+        System.out.println(validFrom);
+        System.out.println(validTo);
+        System.out.println();
+        
+        for(java.security.cert.Certificate cert: chain) {
+        	
+        	System.out.println("END DATE: " + ((X509Certificate) cert).getNotAfter());
+        	System.out.println("START DATE: " + ((X509Certificate) cert).getNotBefore());
+        	System.out.println();
+
+        	if(((X509Certificate) cert).getNotAfter().after(validTo)) return false;
+        	if(((X509Certificate) cert).getNotBefore().before(validFrom)) return false;
+      
+        }
+    	
+    	return true;
     }
 }
