@@ -187,6 +187,7 @@ public class TestService{
 		keyStoreWriterService.write(KEY_STORE, subjectDomainName, privateKey, KEY_STORE_PASSWORD.toCharArray(), chainArray);
 		keyStoreWriterService.saveKeyStore(KEY_STORE, KEY_STORE_PASSWORD.toCharArray());
 
+		csrInfoRepository.delete(csrInfo.get());
 		return "Uspesno potpisan!";
 	}
 

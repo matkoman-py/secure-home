@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.cert.CertIOException;
@@ -25,6 +27,8 @@ import siitnocu.bezbednost.certificates.CertificateGenerator;
 import siitnocu.bezbednost.data.CertificateDTO;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
+import siitnocu.bezbednost.dto.CsrDTO;
+import siitnocu.bezbednost.repositories.CsrInfoRepository;
 
 @Service
 public class KeyStoreService {
@@ -38,7 +42,10 @@ public class KeyStoreService {
 	
     @Autowired
 	private KeyStoreWriterService keyStoreWriterService;
-	
+
+    @Autowired
+    private CsrInfoRepository csrInfoRepository;
+
     public void createNewSelfSignedCertificate() throws IOException, NoSuchAlgorithmException {
     	KeyPair keyPairIssuer = generateKeyPair();
     	
@@ -230,5 +237,9 @@ public class KeyStoreService {
         }
     	
     	return true;
+    }
+
+    public List<CsrDTO> getAllCsrs() {
+        return csrInfoRepository.findAll().stream().map(CsrDTO::new).collect(Collectors.toList());
     }
 }

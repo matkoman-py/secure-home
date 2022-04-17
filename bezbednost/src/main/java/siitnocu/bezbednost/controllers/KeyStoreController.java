@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import siitnocu.bezbednost.data.CertificateDTO;
+import siitnocu.bezbednost.dto.CsrDTO;
 import siitnocu.bezbednost.services.KeyStoreService;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class KeyStoreController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/check-certificate-validity/{alias}")
 	public ResponseEntity<Boolean> isCertificateValid(@PathVariable("alias") String alias) throws Exception {
 		return ResponseEntity.ok(keyStoreService.isCertificateValid(alias));
+	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-csrs")
+	public ResponseEntity<List<CsrDTO>> getAllCsrs() throws Exception {
+		return ResponseEntity.ok(keyStoreService.getAllCsrs());
 	}
 }

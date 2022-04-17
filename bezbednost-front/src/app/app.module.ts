@@ -6,28 +6,31 @@ import { AppComponent } from './app.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
-import {TableModule} from 'primeng/table';
-import {ButtonModule} from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
-
-
-
+import { CsrComponent } from './csr/csr.component';
+import { DialogModule } from 'primeng/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
     CertificateComponent,
     NavbarComponent,
-    CertificateInfoComponent
+    CertificateInfoComponent,
+    CsrComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    DialogModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

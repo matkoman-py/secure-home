@@ -1,0 +1,74 @@
+<p-table [value]="csrs">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>DN</th>
+      <th>ON</th>
+      <th>OU</th>
+      <th>City</th>
+      <th>Email</th>
+      <th>Reason</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-csr>
+    <tr>
+      <td>{{ csr.dn }}</td>
+      <td>{{ csr.on }}</td>
+      <td>{{ csr.ou }}</td>
+      <td>{{ csr.city }}</td>
+      <td>{{ csr.email }}</td>
+      <td>{{ csr.reason }}</td>
+      <td>
+        <button
+          pButton
+          pRipple
+          type="button"
+          label="Answer"
+          class="p-button-danger"
+          (click)="openDialogForIssuer(csr.dn)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  header="Select the issuer"
+  [(visible)]="displayCertificateTableDialog"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <ng-template pTemplate="footer">
+    <p-table [value]="certificates">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Alias</th>
+          <th>Algorithm</th>
+          <th>Key size</th>
+          <th>Expiration date</th>
+          <th>Select</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-certificate>
+        <tr>
+          <td>{{ certificate.entryName }}</td>
+          <td>{{ certificate.algorithm }}</td>
+          <td>{{ certificate.keySize }}</td>
+          <td>{{ certificate.expirationDate }}</td>
+          <td>
+            <button
+              pButton
+              pRipple
+              type="button"
+              label="Select"
+              class="p-button-success"
+              (click)="selectedIssuer(certificate.entryName)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-dialog>
