@@ -11,4 +11,8 @@ export class CertificateService {
   generateRoot(): Observable<String> {
     return this.http.get<String>('/api/key-store/generate-root');
   }
+
+  getAllCertificate(): Observable<String> {
+    return this.http.get<String>('/api/key-store/get-all-certificates');
+  }
 }

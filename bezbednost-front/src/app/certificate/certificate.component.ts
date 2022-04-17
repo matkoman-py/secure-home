@@ -11,7 +11,7 @@ export class CertificateComponent implements OnInit {
   constructor(private certificateService: CertificateService) { }
 
   ngOnInit(): void {
-    this.certificateService.generateRoot().subscribe(res => {
+    this.certificateService.getAllCertificate().subscribe(res => {
       console.log(res);
     })
   }
