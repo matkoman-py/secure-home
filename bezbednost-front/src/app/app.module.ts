@@ -7,20 +7,25 @@ import { CertificateComponent } from './certificate/certificate.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
 import {TableModule} from 'primeng/table';
+import {ButtonModule} from 'primeng/button';
+import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CertificateComponent,
-    NavbarComponent
+    NavbarComponent,
+    CertificateInfoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     MenubarModule,
-    TableModule
+    TableModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,6 +5,9 @@
             <th>Algorithm</th>
             <th>Key size</th>
             <th>Expiration date</th>
+            <th>Delete</th>
+            <th>Preview</th>
+
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-certificate>
@@ -13,6 +16,11 @@
             <td>{{certificate.algorithm}}</td>
             <td>{{certificate.keySize}}</td>
             <td>{{certificate.expirationDate}}</td>
+            <td><button pButton pRipple type="button" label="Delete" class="p-button-danger"></button>
+                <td><button pButton pRipple type="button" label="Preview" class="p-button-primary"></button>
+
+            </td>
+
         </tr>
     </ng-template>
 </p-table>

@@ -146,6 +146,35 @@ public class KeyStoreService {
         return certificates;
     }
     
+    public CertificateDTO getCertificate(String name) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+        List<CertificateDTO> certificates = new ArrayList<>();
+        KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+        // ucitavamo podatke
+        File file = new File(KEY_STORE);
+        InputStream is = new FileInputStream(file);
+        ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+
+        Enumeration<String> enumeration = ks.aliases();
+        while(enumeration.hasMoreElements()) {
+            String alias = enumeration.nextElement();
+            if(alias.equals(name)) {
+            	X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+                String subjectDomainName = certificate.getSubjectDN().getName();
+                String issuerDomainName = certificate.getIssuerDN().getName();
+                String sigAlgName = certificate.getSigAlgName();
+                int serial = certificate.getSerialNumber().intValue();
+                RSAPublicKey rsaPk = (RSAPublicKey) certificate.getPublicKey();
+                int keySize = rsaPk.getModulus().bitLength();
+                Date dateTo = certificate.getNotAfter();
+                Date dateFrom = certificate.getNotBefore();
+                int version = certificate.getVersion();
+                return new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial);
+            }
+        }
+		return null;
+    }
+    
     public List<X509Certificate> getAllCertificatesObjects() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
         List<X509Certificate> certificates = new ArrayList<>();
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
