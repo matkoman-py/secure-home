@@ -14,6 +14,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
 
 @NgModule({
   declarations: [

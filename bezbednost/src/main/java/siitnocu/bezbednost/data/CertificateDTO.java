@@ -2,11 +2,17 @@ package siitnocu.bezbednost.data;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class CertificateDTO {
 	private String entryName;
 	private String algorithm;
 	private int keySize;
+	
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date expirationDate;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date startDate;
 	private String subjectName;
 	private String issuerName;
