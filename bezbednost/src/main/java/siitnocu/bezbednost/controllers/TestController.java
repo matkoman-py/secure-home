@@ -54,4 +54,10 @@ public class TestController {
 										  @RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.signCSR(csr, alias));
 	}
+
+	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/revoke-certificate/{alias}")
+	public ResponseEntity<String> revokeCertifikate(@PathVariable("alias") String alias,
+													@RequestBody String reason) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		return ResponseEntity.ok(testService.revokeCertificate(alias, reason));
+	}
 }
