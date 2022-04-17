@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CertificateService } from './services/certificate.service';
 import { CertificateDTO } from '../model/certificate';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-certificate',
@@ -10,7 +12,7 @@ import { CertificateDTO } from '../model/certificate';
 export class CertificateComponent implements OnInit {
   
   certificates: CertificateDTO[] = [];
-  constructor(private certificateService: CertificateService) { }
+  constructor(private certificateService: CertificateService, private router: Router) { }
 
   ngOnInit(): void {
     
@@ -19,4 +21,11 @@ export class CertificateComponent implements OnInit {
       this.certificates = res;
     })
   }
+
+  go(e: string): void {
+    this.router.navigateByUrl('/certificate/'+e);
+  }
+
+
+
 }

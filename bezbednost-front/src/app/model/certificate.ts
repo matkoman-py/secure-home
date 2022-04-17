@@ -8,4 +8,20 @@ export interface CertificateDTO {
   startDate: string;
   subjectName: string;
   version: number;
+  format: string;
+}
+
+export interface ExtensionsDTO {
+  extendedKeyUsages: string[];
+  keyUsages: string[];
+  subjectAlternativeNames: string[];
+  ca: number;
+  aki: string;
+  ski: string;
+  ekucrit: boolean;
+  kucrit: boolean;
+  sancrit: boolean,
+  bccrit: boolean,
+  akicrit: boolean,
+  skicrit: boolean
 }

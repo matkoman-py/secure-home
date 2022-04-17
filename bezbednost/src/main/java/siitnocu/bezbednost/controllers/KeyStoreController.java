@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import siitnocu.bezbednost.data.CertificateDTO;
 import siitnocu.bezbednost.dto.CsrDTO;
+import siitnocu.bezbednost.data.ExtensionsDTO;
 import siitnocu.bezbednost.services.KeyStoreService;
 
 import java.util.List;
@@ -34,6 +35,16 @@ public class KeyStoreController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-certificates")
 	public ResponseEntity<List<CertificateDTO>> getAllCertificates() throws Exception {
 		return ResponseEntity.ok(keyStoreService.getAllCertificates());
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-certificate/{alias}")
+	public ResponseEntity<CertificateDTO> getCertificate(@PathVariable("alias") String alias) throws Exception {
+		return ResponseEntity.ok(keyStoreService.getCertificate(alias));
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-extensions/{alias}")
+	public ResponseEntity<ExtensionsDTO> getExtensions(@PathVariable("alias") String alias) throws Exception {
+		return ResponseEntity.ok(keyStoreService.getExtensionsForCertificate(alias));
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/check-certificate-validity/{alias}")

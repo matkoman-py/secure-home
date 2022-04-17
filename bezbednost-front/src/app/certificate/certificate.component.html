@@ -17,9 +17,7 @@
             <td>{{certificate.keySize}}</td>
             <td>{{certificate.expirationDate}}</td>
             <td><button pButton pRipple type="button" label="Delete" class="p-button-danger"></button>
-                <td><button pButton pRipple type="button" label="Preview" class="p-button-primary"></button>
-
-            </td>
+            <td><button pButton pRipple type="button" label="Preview" class="p-button-primary" (click)="go(certificate.entryName)"></button></td>
 
         </tr>
     </ng-template>
