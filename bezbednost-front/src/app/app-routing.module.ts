@@ -9,7 +9,7 @@ import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 const routes: Routes = [
   { path: 'certificates', component: CertificateComponent },
   { path: 'generate-csr', component: GenerateCsrComponent },
-  { path: 'certificate/:alias', component: CertificateInfoComponent },
+  { path: 'certificate/:ks/:alias', component: CertificateInfoComponent },
   { path: 'csr', component: CsrComponent },
   { path: 'revoked-certificates', component: RevokedCertsComponent },
 ];

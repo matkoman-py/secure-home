@@ -10,6 +10,7 @@ export interface CertificateDTO {
   version: number;
   format: string;
   valid: boolean;
+  reason: string;
 }
 
 export interface ExtensionsDTO {

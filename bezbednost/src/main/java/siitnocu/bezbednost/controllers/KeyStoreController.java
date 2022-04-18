@@ -37,19 +37,25 @@ public class KeyStoreController {
 		return ResponseEntity.ok(keyStoreService.getAllCertificates());
 	}
 
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-cacertificates")
+	public ResponseEntity<List<CertificateDTO>> getAllCACertificates() throws Exception {
+		return ResponseEntity.ok(keyStoreService.getAllCACertificates());
+	}
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-revoked-certificates")
 	public ResponseEntity<List<CertificateDTO>> getAllRevokedCertificates() throws Exception {
 		return ResponseEntity.ok(keyStoreService.getAllRevokedCertificates());
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-certificate/{alias}")
-	public ResponseEntity<CertificateDTO> getCertificate(@PathVariable("alias") String alias) throws Exception {
-		return ResponseEntity.ok(keyStoreService.getCertificate(alias));
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-certificate/{alias}/{fileName}")
+	public ResponseEntity<CertificateDTO> getCertificate(@PathVariable("alias") String alias,@PathVariable("fileName") String fileName) throws Exception {
+		return ResponseEntity.ok(keyStoreService.getCertificate(alias, fileName));
 	}
 	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-extensions/{alias}")
-	public ResponseEntity<ExtensionsDTO> getExtensions(@PathVariable("alias") String alias) throws Exception {
-		return ResponseEntity.ok(keyStoreService.getExtensionsForCertificate(alias));
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-extensions/{alias}/{fileName}")
+	public ResponseEntity<ExtensionsDTO> getExtensions(@PathVariable("alias") String alias,@PathVariable("fileName") String fileName) throws Exception {
+		return ResponseEntity.ok(keyStoreService.getExtensionsForCertificate(alias, fileName));
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/check-certificate-validity/{alias}")

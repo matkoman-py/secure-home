@@ -241,7 +241,7 @@ public class TestService{
 
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0]=cert;
-		keyStoreWriterService.write("keystore-deleted.jks", cert.getSerialNumber().toString(), privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
+		keyStoreWriterService.write("keystore-deleted.jks", alias, privateKey, KEY_STORE_PASSWORD.toCharArray(), chain);
 		keyStoreWriterService.saveKeyStore("keystore-deleted.jks", KEY_STORE_PASSWORD.toCharArray());
 
 		return "Revoke successful!";

@@ -82,11 +82,13 @@ export class CsrComponent implements OnInit {
   }
 
   getAllCertificates() {
-    this.certificateService.getAllCertificate().subscribe((res) => {
+    this.certificateService.getAllCACertificate().subscribe((res) => {
       console.log(res);
       this.certificates = res;
     });
   }
+
+
   selectedIssuer(alias: string): void {
     //ovo ce ici u drugu funk
     this.extenstionsModal = true;

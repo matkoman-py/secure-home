@@ -37,7 +37,7 @@ export class CertificateComponent implements OnInit {
   }
 
   go(e: string): void {
-    this.router.navigateByUrl('/certificate/'+e);
+    this.router.navigateByUrl('/certificate/keystore/'+e);
   }
 
   show(e: string): void {
@@ -46,9 +46,13 @@ export class CertificateComponent implements OnInit {
   }
 
   delete(e: string): void {
+    if(this.reason.trim() == "") {
+      this.reason = "No reason was specified.";
+    }
     this.certificateService.deleteCertificate(e, this.reason).subscribe(res => {
       this.messageService.add({key: 'tc', severity:'success', summary: 'Successfully revoked', detail: 'Certificate (and all children of said certificate) have been successfully revoked!'});
       this.selectedAlias = "";
+      this.reason = "";
       this.display = false;
       this.getAllCertificates();
     })
