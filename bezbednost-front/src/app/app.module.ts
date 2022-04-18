@@ -21,10 +21,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 import {InputTextareaModule} from 'primeng/inputtextarea';
-
-
-
-
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -52,8 +49,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
     ToastModule,
     RadioButtonModule,
     MultiSelectModule,
-    InputTextareaModule
-
+    InputTextareaModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent],

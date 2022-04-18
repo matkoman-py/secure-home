@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { csrCreateDTO } from '../model/csrCreate';
+import { KeySizeOptions } from '../model/KeySizeOptions';
 import { GenerateCsrService } from './services/generate-csr.service';
 
 @Component({
@@ -12,6 +13,11 @@ import { GenerateCsrService } from './services/generate-csr.service';
 export class GenerateCsrComponent implements OnInit {
 
   csrInfo: csrCreateDTO = {};
+  sizes: KeySizeOptions[] = [
+    {name: 2048, code: 2048},
+    {name: 1024, code: 1024},
+    {name: 512, code: 512},
+  ];
 
   constructor(private generateCsrService: GenerateCsrService,
               private messageService: MessageService) { }
@@ -44,7 +50,6 @@ export class GenerateCsrComponent implements OnInit {
     if (this.csrInfo.email == null) return false;
     if (this.csrInfo.organizationName == null) return false;
     if (this.csrInfo.organizationUnit == null) return false;
-    if (this.csrInfo.reason == null) return false;
     if (this.csrInfo.state == null) return false;
 
     return true;

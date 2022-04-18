@@ -35,6 +35,9 @@
         <input type="text" pInputText [(ngModel)]="csrInfo.reason" placeholder="Reason" />
       </div>
       <br>
+      <p-dropdown optionValue="code" [options]="sizes" [(ngModel)]="csrInfo.keySize" optionLabel="name"></p-dropdown>
+      <br>
+      <br>
       <div class="p-field">
         <p-button label="Submit" (onClick)="generateCsr()" [disabled]="!isInfoValid()"></p-button>
       </div>
