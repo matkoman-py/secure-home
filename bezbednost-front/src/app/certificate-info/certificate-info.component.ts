@@ -12,7 +12,7 @@ export class CertificateInfoComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private certificateInfoService: CertificateInfoService) { }
 
-  certificate: CertificateDTO = {algorithm:"",entryName:"",expirationDate:Date(),issuerName:"",keySize:0,serialNo:0,startDate:Date(),subjectName:"",version:0, format:""};
+  certificate: CertificateDTO = {algorithm:"",entryName:"",expirationDate:Date(),issuerName:"",keySize:0,serialNo:0,startDate:Date(),subjectName:"",version:0, format:"", valid:false};
   extensions: ExtensionsDTO = {aki:"",akicrit:false,bccrit:false,ca:-1,ekucrit:false,extendedKeyUsages:[],keyUsages:[],kucrit:false,sancrit:false,ski:"",skicrit:false,subjectAlternativeNames:[]};
   ngOnInit(): void {
     this.route.params.subscribe(params => {

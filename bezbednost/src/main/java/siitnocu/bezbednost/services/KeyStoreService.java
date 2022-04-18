@@ -158,9 +158,9 @@ public class KeyStoreService {
             Date dateFrom = certificate.getNotBefore();
             int version = certificate.getVersion();
             String format = rsaPk.getAlgorithm();
-
-
-            certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format));
+            boolean isValid = isCertificateValid(alias);
+            
+            certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid));
         }
 
         return certificates;
@@ -402,8 +402,8 @@ public class KeyStoreService {
                 Date dateFrom = certificate.getNotBefore();
                 int version = certificate.getVersion();
                 String format = rsaPk.getAlgorithm();
-                
-                return new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format);
+                boolean isValid = isCertificateValid(alias);
+                return new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid);
             }
         }
 		return null;
