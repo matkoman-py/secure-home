@@ -96,7 +96,7 @@ public class TestService{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
-		kpg.initialize(2048);
+		kpg.initialize(csrInfo.getKeySize());
 		KeyPair pair = kpg.generateKeyPair();
 		String info = "CN="+csrInfo.getDomainName()+", O="+csrInfo.getOrganizationName()+", OU="+csrInfo.getOrganizationUnit()+", L="+csrInfo.getCity()+", S="+csrInfo.getState()+", C="+csrInfo.getCountry()+", EMAIL="+csrInfo.getEmail();
 		PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(

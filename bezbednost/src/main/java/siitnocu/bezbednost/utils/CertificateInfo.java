@@ -10,8 +10,9 @@ public class CertificateInfo {
 	private String country;
 	private String email;
 	private String reason;
+	private Integer keySize;
 	public CertificateInfo(String domainName, String organizationName, String organizationUnit, String city,
-			String state, String country, String email, String reason) {
+			String state, String country, String email, String reason, Integer keySize) {
 		super();
 		this.domainName = domainName;
 		this.organizationName = organizationName;
@@ -21,6 +22,7 @@ public class CertificateInfo {
 		this.country = country;
 		this.email = email;
 		this.reason = reason;
+		this.keySize = keySize;
 	}
 	public CertificateInfo() {
 		super();
@@ -75,4 +77,11 @@ public class CertificateInfo {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
+	public Integer getKeySize() {
+		return keySize;
+	}
+	public void setKeySize(Integer keySize) {
+		this.keySize = keySize;
+	}
+
 }

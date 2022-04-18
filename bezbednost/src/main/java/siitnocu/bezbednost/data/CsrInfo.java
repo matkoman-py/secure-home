@@ -24,7 +24,7 @@ public class CsrInfo {
     private String email;
     @Column(columnDefinition="text", nullable = false)
     private String csrString;
-    @Column(columnDefinition="text", nullable = false)
+    @Column(columnDefinition="text", nullable = true)
     private String reason;
 
     public CsrInfo(String domainName, String organizationName, String organizationUnit, String city, String state, String country, String email, String csrString, String reason) {
