@@ -19,6 +19,7 @@ import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     CsrComponent,
     GenerateCsrComponent,
     CertificateInfoComponent,
+    RevokedCertsComponent,
   ],
   imports: [
     BrowserAnimationsModule,

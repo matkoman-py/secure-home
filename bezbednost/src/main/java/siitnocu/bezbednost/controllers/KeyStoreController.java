@@ -36,7 +36,12 @@ public class KeyStoreController {
 	public ResponseEntity<List<CertificateDTO>> getAllCertificates() throws Exception {
 		return ResponseEntity.ok(keyStoreService.getAllCertificates());
 	}
-	
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-all-revoked-certificates")
+	public ResponseEntity<List<CertificateDTO>> getAllRevokedCertificates() throws Exception {
+		return ResponseEntity.ok(keyStoreService.getAllRevokedCertificates());
+	}
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/get-certificate/{alias}")
 	public ResponseEntity<CertificateDTO> getCertificate(@PathVariable("alias") String alias) throws Exception {
 		return ResponseEntity.ok(keyStoreService.getCertificate(alias));

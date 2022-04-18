@@ -17,6 +17,11 @@ public class CSRExtensions {
 	public void setExtensions(CertificateExtensions extensions) {
 		this.extensions = extensions;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "CSRExtensions{" +
+				"extensions=" + extensions +
+				'}';
+	}
 }

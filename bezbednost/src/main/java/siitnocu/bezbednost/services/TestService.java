@@ -156,11 +156,13 @@ public class TestService{
 			return "There is no subject with the given domain name!";
 		}
 
+		System.out.println("EVOOO ME " + csr.toString());
+
 		SubjectData subjectData = decodeCSR(csrInfo.get().getCsrString());
 		PrivateKey privateKey = keyStoreReaderService.readPrivateKey(KEY_STORE, "pass", alias, "pass");
 
 		X509Certificate cert = (X509Certificate) keyStoreReaderService.readCertificate(KEY_STORE, "pass", alias);
-		System.out.println("EVOOO ME " + cert.getBasicConstraints());
+
 		if(cert.getBasicConstraints() == -1){
 			return "Issuer is not a CA!";
 		}

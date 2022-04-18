@@ -4,12 +4,14 @@ import { CertificateInfoComponent } from './certificate-info/certificate-info.co
 import { CertificateComponent } from './certificate/certificate.component';
 import { CsrComponent } from './csr/csr.component';
 import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
+import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 
 const routes: Routes = [
   { path: 'certificates', component: CertificateComponent },
   { path: 'generate-csr', component: GenerateCsrComponent },
   { path: 'certificate/:alias', component: CertificateInfoComponent },
   { path: 'csr', component: CsrComponent },
+  { path: 'revoked-certificates', component: RevokedCertsComponent },
 ];
 
 @NgModule({

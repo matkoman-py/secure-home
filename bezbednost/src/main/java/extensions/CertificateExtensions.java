@@ -109,7 +109,22 @@ public class CertificateExtensions {
 	public void setSKIExt(boolean sKIExt) {
 		SKIExt = sKIExt;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "CertificateExtensions{" +
+				"basicConstraints=" + basicConstraints +
+				", extendedKeyUsage=" + extendedKeyUsage +
+				", keyUsage=" + keyUsage +
+				", subjectAlternativeName=" + subjectAlternativeName +
+				", BCCrit=" + BCCrit +
+				", EKUCrit=" + EKUCrit +
+				", KUECrit=" + KUECrit +
+				", SANCrit=" + SANCrit +
+				", SKICrit=" + SKICrit +
+				", AKICrit=" + AKICrit +
+				", AKIExt=" + AKIExt +
+				", SKIExt=" + SKIExt +
+				'}';
+	}
 }

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CsrDTO } from 'src/app/model/csr';
+import { ExtensionsDTO } from 'src/app/model/extensions';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +14,17 @@ export class CsrService {
     return this.http.get<CsrDTO[]>('/api/key-store/get-all-csrs');
   }
 
-  signCsr(issuerAlias: string, subjectAlias: string): Observable<String> {
-    return this.http.post<String>(
+  signCsr(
+    issuerAlias: string,
+    subjectAlias: string,
+    extensions: ExtensionsDTO
+  ): Observable<any> {
+    var extensionsDto = { extensions };
+
+    return this.http.post(
       `/api/test/sign-csr/${issuerAlias}/${subjectAlias}`,
-      { extensions: null }
+      extensionsDto,
+      { responseType: 'text' }
     );
   }
 }

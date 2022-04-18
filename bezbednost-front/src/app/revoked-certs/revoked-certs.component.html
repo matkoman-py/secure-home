@@ -1,0 +1,29 @@
+<p-table [value]="certificates">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Alias</th>
+      <th>Algorithm</th>
+      <th>Key size</th>
+      <th>Expiration date</th>
+      <th>Preview</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-certificate>
+    <tr>
+      <td>{{ certificate.entryName }}</td>
+      <td>{{ certificate.algorithm }}</td>
+      <td>{{ certificate.keySize }}</td>
+      <td>{{ certificate.expirationDate }}</td>
+      <td>
+        <button
+          pButton
+          pRipple
+          type="button"
+          label="Preview"
+          class="p-button-primary"
+          (click)="go(certificate.entryName)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

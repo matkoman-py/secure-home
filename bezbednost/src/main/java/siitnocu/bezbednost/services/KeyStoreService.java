@@ -165,7 +165,38 @@ public class KeyStoreService {
 
         return certificates;
     }
-    
+
+	public List<CertificateDTO> getAllRevokedCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+		List<CertificateDTO> certificates = new ArrayList<>();
+		KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+		// ucitavamo podatke
+		File file = new File("keystore-deleted.jks");
+		InputStream is = new FileInputStream(file);
+		ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+
+		Enumeration<String> enumeration = ks.aliases();
+		while(enumeration.hasMoreElements()) {
+			String alias = enumeration.nextElement();
+			X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+			String subjectDomainName = certificate.getSubjectDN().getName();
+			String issuerDomainName = certificate.getIssuerDN().getName();
+			String sigAlgName = certificate.getSigAlgName();
+			int serial = certificate.getSerialNumber().intValue();
+			RSAPublicKey rsaPk = (RSAPublicKey) certificate.getPublicKey();
+			int keySize = rsaPk.getModulus().bitLength();
+			Date dateTo = certificate.getNotAfter();
+			Date dateFrom = certificate.getNotBefore();
+			int version = certificate.getVersion();
+			String format = rsaPk.getAlgorithm();
+
+
+			certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format));
+		}
+
+		return certificates;
+	}
+
     public ExtensionsDTO getExtensionsForCertificate(String alias) throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, InvalidNameException, IOException {
     	X509Certificate cert = getFullCertificate(alias);
     	List<String> keyUsages = new ArrayList<String>();
