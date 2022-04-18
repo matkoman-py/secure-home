@@ -191,7 +191,7 @@ public class KeyStoreService {
 			String format = rsaPk.getAlgorithm();
 
 
-			certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format));
+			certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isCertificateValid(alias)));
 		}
 
 		return certificates;
