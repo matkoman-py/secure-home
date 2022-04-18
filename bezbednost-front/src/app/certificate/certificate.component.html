@@ -1,3 +1,4 @@
+<p-toast position="center" key="tc"></p-toast>
 <p-table [value]="certificates">
     <ng-template pTemplate="header">
         <tr>
@@ -5,7 +6,8 @@
             <th>Algorithm</th>
             <th>Key size</th>
             <th>Expiration date</th>
-            <th>Delete</th>
+            <th>Certificate is valid</th>
+            <th>Revoke</th>
             <th>Preview</th>
 
         </tr>
@@ -16,9 +18,21 @@
             <td>{{certificate.algorithm}}</td>
             <td>{{certificate.keySize}}</td>
             <td>{{certificate.expirationDate}}</td>
-            <td><button pButton pRipple type="button" label="Delete" class="p-button-danger"></button>
+            <td *ngIf="certificate.valid">Yes</td>
+            <td *ngIf="!certificate.valid">No</td>
+
+            <td><button pButton pRipple type="button" label="Revoke" class="p-button-danger" (click)="show(certificate.entryName)"></button>
             <td><button pButton pRipple type="button" label="Preview" class="p-button-primary" (click)="go(certificate.entryName)"></button></td>
 
         </tr>
     </ng-template>
 </p-table>
+
+<p-dialog [(visible)]="display" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+    <div class="center">
+        <h1 style="text-align: center;">Reason for revoking certificate with alias: <br> {{selectedAlias}}</h1>
+        <textarea style="width: 100%;" pInputTextarea [autoResize]="autoResize" [(ngModel)]="reason"></textarea>
+        <button style="width: 100%;" pButton pRipple type="button" label="Send" class="p-button-primary" (click)="delete(selectedAlias)"></button>
+
+    </div>
+</p-dialog>

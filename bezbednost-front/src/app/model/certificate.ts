@@ -9,6 +9,7 @@ export interface CertificateDTO {
   subjectName: string;
   version: number;
   format: string;
+  valid: boolean;
 }
 
 export interface ExtensionsDTO {

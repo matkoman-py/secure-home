@@ -17,6 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+
 
 
 
@@ -44,6 +46,7 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     CardModule,
     ToastModule,
+    InputTextareaModule
 
   ],
   providers: [],
