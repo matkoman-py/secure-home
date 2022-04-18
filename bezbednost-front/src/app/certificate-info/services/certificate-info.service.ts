@@ -10,11 +10,11 @@ export class CertificateInfoService {
   constructor(private http: HttpClient) {}
 
 
-  getCertificate(alias: string): Observable<CertificateDTO> {
-    return this.http.get<CertificateDTO>('/api/key-store/get-certificate/'+ alias);
+  getCertificate(alias: string, file:string): Observable<CertificateDTO> {
+    return this.http.get<CertificateDTO>('/api/key-store/get-certificate/'+ alias+"/"+file);
   }
 
-  getExtension(alias: string): Observable<ExtensionsDTO> {
-    return this.http.get<ExtensionsDTO>('/api/key-store/get-extensions/'+ alias);
+  getExtension(alias: string, file: string): Observable<ExtensionsDTO> {
+    return this.http.get<ExtensionsDTO>('/api/key-store/get-extensions/'+ alias+"/"+file);
   }
 }

@@ -17,6 +17,10 @@ export class CertificateService {
     return this.http.get<CertificateDTO[]>('/api/key-store/get-all-certificates');
   }
 
+  getAllCACertificate(): Observable<CertificateDTO[]> {
+    return this.http.get<CertificateDTO[]>('/api/key-store/get-all-cacertificates');
+  }
+
   deleteCertificate(e: string, reason: string): Observable<String> {
     return this.http.delete('/api/test/revoke-certificate/'+e, {body: reason, responseType: 'text'});
   }

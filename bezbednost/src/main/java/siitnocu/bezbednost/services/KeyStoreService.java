@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.text.Normalizer.Form;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -35,11 +36,13 @@ import org.springframework.stereotype.Service;
 
 import siitnocu.bezbednost.certificates.CertificateGenerator;
 import siitnocu.bezbednost.data.CertificateDTO;
+import siitnocu.bezbednost.data.DeletedCertificate;
 import siitnocu.bezbednost.data.ExtensionsDTO;
 import siitnocu.bezbednost.data.IssuerData;
 import siitnocu.bezbednost.data.SubjectData;
 import siitnocu.bezbednost.dto.CsrDTO;
 import siitnocu.bezbednost.repositories.CsrInfoRepository;
+import siitnocu.bezbednost.repositories.DeletedCertificateRepository;
 
 @Service
 public class KeyStoreService {
@@ -56,6 +59,9 @@ public class KeyStoreService {
 
     @Autowired
     private CsrInfoRepository csrInfoRepository;
+    
+    @Autowired
+    private DeletedCertificateRepository deletedCertificateRepository;
 
     public void createNewSelfSignedCertificate() throws IOException, NoSuchAlgorithmException {
     	KeyPair keyPairIssuer = generateKeyPair();
@@ -135,6 +141,38 @@ public class KeyStoreService {
         return null;
     }
     
+    public List<CertificateDTO> getAllCACertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
+        List<CertificateDTO> certificates = new ArrayList<>();
+        KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+
+        // ucitavamo podatke
+        File file = new File(KEY_STORE);
+        InputStream is = new FileInputStream(file);
+        ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+
+        Enumeration<String> enumeration = ks.aliases();
+        while(enumeration.hasMoreElements()) {
+            String alias = enumeration.nextElement();
+            X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+            String subjectDomainName = certificate.getSubjectDN().getName();
+            String issuerDomainName = certificate.getIssuerDN().getName();
+            String sigAlgName = certificate.getSigAlgName();
+            int serial = certificate.getSerialNumber().intValue();
+            RSAPublicKey rsaPk = (RSAPublicKey) certificate.getPublicKey();
+            int keySize = rsaPk.getModulus().bitLength();
+            Date dateTo = certificate.getNotAfter();
+            Date dateFrom = certificate.getNotBefore();
+            int version = certificate.getVersion();
+            String format = rsaPk.getAlgorithm();
+            boolean isValid = isCertificateValid(alias);
+            if(certificate.getBasicConstraints() != -1) {
+                certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid, ""));
+            }
+        }
+
+        return certificates;
+    }
+    
     public List<CertificateDTO> getAllCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException {
         List<CertificateDTO> certificates = new ArrayList<>();
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
@@ -160,7 +198,7 @@ public class KeyStoreService {
             String format = rsaPk.getAlgorithm();
             boolean isValid = isCertificateValid(alias);
             
-            certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid));
+            certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid, ""));
         }
 
         return certificates;
@@ -189,16 +227,20 @@ public class KeyStoreService {
 			Date dateFrom = certificate.getNotBefore();
 			int version = certificate.getVersion();
 			String format = rsaPk.getAlgorithm();
+			String reason = "";
+			Optional<DeletedCertificate> dc = deletedCertificateRepository.findByName(alias);
+        	if(!dc.isEmpty()) {
+        		reason = dc.get().getReason();
+        	}
 
-
-			certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isCertificateValid(alias)));
+			certificates.add(new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isCertificateValid(alias), reason));
 		}
 
 		return certificates;
 	}
 
-    public ExtensionsDTO getExtensionsForCertificate(String alias) throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, InvalidNameException, IOException {
-    	X509Certificate cert = getFullCertificate(alias);
+    public ExtensionsDTO getExtensionsForCertificate(String alias, String fileName) throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, InvalidNameException, IOException {
+    	X509Certificate cert = getFullCertificate(alias, fileName);
     	List<String> keyUsages = new ArrayList<String>();
     	List<String> extendedKeyUsages = new ArrayList<String>();
     	List<String> subjectAlternativeNames = new ArrayList<String>();
@@ -378,14 +420,15 @@ public class KeyStoreService {
     }
     
     
-    public CertificateDTO getCertificate(String name) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException, InvalidNameException {
+    public CertificateDTO getCertificate(String name, String fileName) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException, InvalidNameException {
         List<CertificateDTO> certificates = new ArrayList<>();
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
 
         // ucitavamo podatke
-        File file = new File(KEY_STORE);
+        File file = new File(fileName);
         InputStream is = new FileInputStream(file);
         ks.load(is, KEY_STORE_PASSWORD.toCharArray());
+        
 
         Enumeration<String> enumeration = ks.aliases();
         while(enumeration.hasMoreElements()) {
@@ -403,17 +446,24 @@ public class KeyStoreService {
                 int version = certificate.getVersion();
                 String format = rsaPk.getAlgorithm();
                 boolean isValid = isCertificateValid(alias);
-                return new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid);
+                String reason = "";
+                if(fileName.equals("keystore-deleted.jks")) {
+                	Optional<DeletedCertificate> dc = deletedCertificateRepository.findByName(alias);
+                	if(!dc.isEmpty()) {
+                		reason = dc.get().getReason();
+                	}
+                }
+                return new CertificateDTO(alias, sigAlgName, keySize, dateTo, dateFrom, subjectDomainName, issuerDomainName, version, serial, format, isValid, reason);
             }
         }
 		return null;
     }
     
-    public X509Certificate getFullCertificate(String name) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException, InvalidNameException {
+    public X509Certificate getFullCertificate(String name, String fileName) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException, InvalidNameException {
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
 
         // ucitavamo podatke
-        File file = new File(KEY_STORE);
+        File file = new File(fileName);
         InputStream is = new FileInputStream(file);
         ks.load(is, KEY_STORE_PASSWORD.toCharArray());
 

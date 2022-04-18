@@ -1,5 +1,11 @@
 <div class="center">
 <!-- Your HTML code goes right here -->
+<div *ngIf="certificate.reason.trim() != ''"> 
+  <h2>The following certificate has been revoked</h2>
+  <p>Reason for revokation:</p>
+  <textarea style="width: 100%;" pInputTextarea [autoResize]="autoResize" [(ngModel)]="certificate.reason" disabled></textarea>
+
+</div>
     <p>Version:</p>
     <input type="text" pInputText style="width: 100%;" value="{{certificate.version}}" disabled/>
     <p>Subject:</p>

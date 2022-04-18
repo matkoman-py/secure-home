@@ -23,6 +23,7 @@ export class RevokedCertsComponent implements OnInit {
     });
   }
   go(e: string): void {
-    this.router.navigateByUrl('/certificate/' + e);
+    this.router.navigateByUrl('/certificate/revoke/'+e);
+
   }
 }

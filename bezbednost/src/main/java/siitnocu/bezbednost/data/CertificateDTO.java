@@ -20,12 +20,13 @@ public class CertificateDTO {
 	private int serialNo;
 	private String format;
 	private boolean isValid;
+	private String reason;
 	
 	
 	
 	
 	public CertificateDTO(String entryName, String algorithm, int keySize, Date expirationDate, Date startDate,
-			String subjectName, String issuerName, int version, int serialNo, String format,boolean isValid) {
+			String subjectName, String issuerName, int version, int serialNo, String format,boolean isValid, String reason) {
 		super();
 		this.entryName = entryName;
 		this.algorithm = algorithm;
@@ -38,6 +39,7 @@ public class CertificateDTO {
 		this.serialNo = serialNo;
 		this.format = format;
 		this.isValid = isValid;
+		this.reason = reason;
 	}
 	public CertificateDTO() {
 		super();
@@ -108,6 +110,14 @@ public class CertificateDTO {
 	public void setValid(boolean isValid) {
 		this.isValid = isValid;
 	}
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
 	
 	
 	
