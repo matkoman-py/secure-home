@@ -41,6 +41,8 @@ export class GenerateCsrComponent implements OnInit {
         detail: 'CSR succesfully created',
       });
     })
+
+    this.csrInfo = {}
   }
 
   isInfoValid() {
