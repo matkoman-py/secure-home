@@ -3,52 +3,58 @@ package siitnocu.bezbednost.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
-import siitnocu.bezbednost.dto.UserDTO;
-import siitnocu.bezbednost.repositories.RoleRepository;
+import siitnocu.bezbednost.dto.UserRequest;
 import siitnocu.bezbednost.repositories.UserRepository;
 
 @Service
-@Transactional
 public class UserService {
-	
-	@Autowired
-	public UserService() {
-		
-	}
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
-	private RoleRepository roleRepository;
-	
-	public String create(UserDTO userData) {
-		User newUser = new User(userData.getUsername(),
-								userData.getPassword(),
-								userData.getName(),
-								userData.getSurname(),
-								userData.getEmail(),
-								userData.getDateOfBirth(),
-								roleRepository.findByRoleName(userData.getRoleName()).get());
-		
-		userRepository.save(newUser);
-		return "User " + userData.getUsername() + " succesfully created";
-	}
-	
-	public String delete(Integer Id) {
-		if(userRepository.findById(Id) != null) {
-			userRepository.deleteById(Id);
-			return "User with id: " + Id + " succesfully deleated";
-		}
-		
-		return "No user with id: " + Id + " was found";
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleService roleService;
+
+	public User findByUsername(String username) throws UsernameNotFoundException {
+		return userRepository.findByUsername(username);
 	}
 
-	public List<User> getAll() {
+	public User findById(Long id) throws AccessDeniedException {
+		return userRepository.findById(id).orElseGet(null);
+	}
+
+	public List<User> findAll() throws AccessDeniedException {
 		return userRepository.findAll();
 	}
+
+	public User save(UserRequest userRequest) {
+		User u = new User();
+		u.setUsername(userRequest.getUsername());
+		
+		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
+		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
+		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+		
+		u.setFirstName(userRequest.getFirstname());
+		u.setLastName(userRequest.getLastname());
+		u.setEnabled(true);
+		u.setEmail(userRequest.getEmail());
+
+		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
+		List<Role> roles = roleService.findByName("ROLE_USER");
+		u.setRoles(roles);
+		
+		return this.userRepository.save(u);
+	}
+
 }

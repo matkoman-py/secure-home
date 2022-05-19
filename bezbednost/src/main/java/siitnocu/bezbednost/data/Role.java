@@ -1,56 +1,73 @@
 package siitnocu.bezbednost.data;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
-public class Role {
-	
-	@Id
+@Table(name = "ROLE")
+public class Role implements GrantedAuthority {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Long id;
 
-	@Column(nullable = false)
-    private String roleName;
-    
-	@Column(nullable = false)
-    private List<String> objectAccesPermissions;
+    @Column(name = "name")
+    String name;
 
-	public Role(String roleName, List<String> objectAccesPermissions) {
-		this.roleName = roleName;
-		this.objectAccesPermissions = objectAccesPermissions;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_privilege",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+    private Set<Privilege> privileges;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles" , fetch = FetchType.LAZY)
+    private Set<User> users;
+
+    @JsonIgnore
+    @Override
+    public String getAuthority() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @JsonIgnore
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+	public Collection<? extends GrantedAuthority> getPrivileges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Role(String name, Set<Privilege> privileges, Set<User> users) {
+		super();
+		this.name = name;
+		this.privileges = privileges;
+		this.users = users;
 	}
 
 	public Role() {
-		
+		super();
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public List<String> getObjectAccesPermissions() {
-		return objectAccesPermissions;
-	}
-
-	public void setObjectAccesPermissions(List<String> objectAccesPermissions) {
-		this.objectAccesPermissions = objectAccesPermissions;
-	}
 }
