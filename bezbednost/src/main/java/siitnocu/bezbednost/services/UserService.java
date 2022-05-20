@@ -1,5 +1,6 @@
 package siitnocu.bezbednost.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.dto.RoleUpdateInfo;
 import siitnocu.bezbednost.repositories.UserRepository;
 
 @Service
@@ -40,9 +42,7 @@ public class UserService {
 	public User save(UserRequest userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
-		
-		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
-		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
+
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		
 		u.setFirstName(userRequest.getFirstname());
@@ -50,11 +50,37 @@ public class UserService {
 		u.setEnabled(true);
 		u.setEmail(userRequest.getEmail());
 
-		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-		List<Role> roles = roleService.findByName("ROLE_USER");
+		List<Role> roles = new ArrayList<>();
+		for(String role: userRequest.getRoles()) {
+			roles.add(roleService.findByName(role));
+		}
 		u.setRoles(roles);
 		
 		return this.userRepository.save(u);
 	}
 
+	public String delete(Long Id) {
+		User u = findById(Id);
+		
+		if(u != null) {
+			userRepository.delete(u);
+			return "User with id: " + Id + " succesfully deleated!";
+		}
+		return "User with id: " + Id + " not found!";
+	}
+	
+	public String update(RoleUpdateInfo roleData) {
+		User u = findById(roleData.getId());
+		
+		if(u != null) {
+			List<Role> oldRoles = new ArrayList<>();
+			for(String role: roleData.getRoles()) {
+				oldRoles.add(roleService.findByName(role));
+			}
+			u.setRoles(oldRoles);
+			userRepository.save(u);
+			return "User with id: " + roleData.getId() + " succesfully updated!";
+		}
+		return "User with id: " + roleData.getId() + " not found!";
+	}
 }

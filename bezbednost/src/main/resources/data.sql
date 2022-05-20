@@ -6,6 +6,8 @@ INSERT INTO USERS (username, password, first_name, last_name, email, enabled, la
 
 INSERT INTO ROLE (name) VALUES ('ROLE_USER');
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
+INSERT INTO ROLE (name) VALUES ('ROLE_OWNER');
+INSERT INTO ROLE (name) VALUES ('ROLE_RESIDENT');
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 1); -- user-u dodeljujemo rolu USER
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo rolu ADMIN
@@ -13,8 +15,14 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo ro
 INSERT INTO PRIVILEGE (name) VALUES ('READ_USER');
 INSERT INTO PRIVILEGE (name) VALUES ('READ_USERS');
 INSERT INTO PRIVILEGE (name) VALUES ('FIND_USER');
+INSERT INTO PRIVILEGE (name) VALUES ('SAVE_USER');
+INSERT INTO PRIVILEGE (name) VALUES ('UPDATE_USERS');
+INSERT INTO PRIVILEGE (name) VALUES ('DELETE_USER');
 
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 3);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 1);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 2);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 3);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 4);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 5);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 6);

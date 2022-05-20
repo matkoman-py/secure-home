@@ -54,11 +54,6 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-	public Collection<? extends GrantedAuthority> getPrivileges() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Role(String name, Set<Privilege> privileges, Set<User> users) {
 		super();
 		this.name = name;
@@ -68,6 +63,10 @@ public class Role implements GrantedAuthority {
 
 	public Role() {
 		super();
+	}
+
+	public Collection<? extends GrantedAuthority> getPrivileges() {
+		return this.privileges;
 	}
 
 }

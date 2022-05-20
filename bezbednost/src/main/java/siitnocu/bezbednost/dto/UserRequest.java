@@ -1,6 +1,7 @@
 package siitnocu.bezbednost.dto;
 
-// DTO koji preuzima podatke iz HTML forme za registraciju
+import java.util.List;
+
 public class UserRequest {
 
 	private Long id;
@@ -14,6 +15,8 @@ public class UserRequest {
 	private String lastname;
 	
 	private String email;
+	
+	private List<String> roles;
 
 	public String getUsername() {
 		return username;
@@ -63,4 +66,11 @@ public class UserRequest {
 		this.email = email;
 	}
 
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
 }
