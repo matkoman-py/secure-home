@@ -25,7 +25,7 @@ import siitnocu.bezbednost.services.UserService;
 
 // Primer kontrolera cijim metodama mogu pristupiti samo autorizovani korisnici
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin
 public class UserController {
 
@@ -41,7 +41,7 @@ public class UserController {
 		return this.userService.findById(userId);
 	}
 
-	@GetMapping("/user/all")
+	@GetMapping("/all")
 	@PreAuthorize("hasAuthority('READ_USERS')")
 	public List<User> loadAll() {
 		return this.userService.findAll();
@@ -52,8 +52,6 @@ public class UserController {
 	public User user(Principal user) {
 		return this.userService.findByUsername(user.getName());
 	}
-	
-	//TODO: Dodati u data.sql
 	
 	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('SAVE_USER')")

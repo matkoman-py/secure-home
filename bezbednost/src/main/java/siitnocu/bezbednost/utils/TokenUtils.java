@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
 import io.jsonwebtoken.*;
+import org.springframework.security.core.GrantedAuthority;
+import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -67,13 +69,17 @@ public class TokenUtils {
      * Funkcija za generisanje JWT tokena.
      *
      * @param username Korisničko ime korisnika kojem se token izdaje
+     * @param roles
      * @return JWT token
      */
-    public String generateToken(String username, String fingerprint) {
+    public String generateToken(String username, String fingerprint, List<Role> roles) {
         // moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())
 
         // Kreiranje tokena sa fingerprint-om
         String fingerprintHash = generateFingerprintHash(fingerprint);
+        List<String> authorities = roles.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
@@ -81,6 +87,7 @@ public class TokenUtils {
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .claim("userFingerprint", fingerprintHash)
+                .claim("roles", authorities)
                 .signWith(SIGNATURE_ALGORITHM, SECRET)
                 .compact();
     }

@@ -25,12 +25,12 @@ import siitnocu.bezbednost.utils.TokenUtils;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	// Implementacija PasswordEncoder-a koriscenjem BCrypt hashing funkcije.
-	// BCrypt po defalt-u radi 10 rundi hesiranja prosledjene vrednosti.
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	private final PasswordEncoder passwordEncoder;
+
+	public WebSecurityConfig(PasswordEncoder passwordEncoder){
+		this.passwordEncoder = passwordEncoder;
 	}
+
 
 	// Servis koji se koristi za citanje podataka o korisnicima aplikacije
 	@Autowired
@@ -51,15 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
-			// Definisemo uputstva AuthenticationManager-u:
-		
-			// 1. koji servis da koristi da izvuce podatke o korisniku koji zeli da se autentifikuje
-			// prilikom autentifikacije, AuthenticationManager ce sam pozivati loadUserByUsername() metodu ovog servisa
-			.userDetailsService(customUserDetailsService) 
-			
-			// 2. kroz koji enkoder da provuce lozinku koju je dobio od klijenta u zahtevu 
-			// da bi adekvatan hash koji dobije kao rezultat hash algoritma uporedio sa onim koji se nalazi u bazi (posto se u bazi ne cuva plain lozinka)
-			.passwordEncoder(new BCryptPasswordEncoder());
+			.userDetailsService(customUserDetailsService)
+			.passwordEncoder(passwordEncoder);
 	}
 
 	// Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
@@ -74,29 +67,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// ovo znaci da server ne pamti nikakvo stanje, tokeni se ne cuvaju na serveru 
 			// ovo nije slucaj kao sa sesijama koje se cuvaju na serverskoj strani - STATEFULL aplikacija
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
 			// sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku
 			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
 			// svim korisnicima dopusti da pristupe sledecim putanjama:
 			.authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
-								.antMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
-								.antMatchers("/api/foo").permitAll()		// /api/foo
-								
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
 			// koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
 			// samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin: 
 			// .antMatchers("/admin").hasRole("ADMIN") ili .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
-							       
 			// za svaki drugi zahtev korisnik mora biti autentifikovan
 			.anyRequest().authenticated().and()
-			
 			// za development svrhe ukljuci konfiguraciju za CORS iz WebConfig klase
 			.cors().and()
 			// umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class);
 		
-		// zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 		http.csrf().disable();
 
 		// Aktiviramo ugrađenu zaštitu od XSS napada da browser ne bi izvršavao maliciozne skripte

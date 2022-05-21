@@ -58,7 +58,7 @@ public class AuthenticationController {
         // Kreiraj token za tog korisnika
         User user = (User) authentication.getPrincipal();
         String fingerprint = tokenUtils.generateFingerprint();
-        String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint);
+        String jwt = tokenUtils.generateToken(user.getUsername(), fingerprint, user.getRoles());
         int expiresIn = tokenUtils.getExpiredIn();
 
         // Kreiraj cookie
