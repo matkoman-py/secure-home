@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,16 +42,19 @@ public class TestController {
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('GENERATE_CSR')")
 	public ResponseEntity<String> getAll(@RequestBody CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.generateCSR(csrInfo));
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/decode")
+	@PreAuthorize("hasAuthority('DECODE_CSR')")
 	public ResponseEntity<String> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.decodeCSR(csr).getSerialNumber());
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/best")
+	@PreAuthorize("hasAuthority('CSR_EXTENSIONS')")
 	public ResponseEntity<CSRExtensions> getThise() throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		CSRExtensions csr= new CSRExtensions();
 		CertificateExtensions ce = new CertificateExtensions();
@@ -60,6 +64,7 @@ public class TestController {
 	}
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/sign-csr/{issuerAlias}/{subjectDomainName}")
+	@PreAuthorize("hasAuthority('SIGN_CSR')")
 	public ResponseEntity<String> signCsr(@PathVariable("issuerAlias") String alias,
 										  @PathVariable("subjectDomainName") String subjectDomainName,
 										  @RequestBody CSRExtensions csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
@@ -67,6 +72,7 @@ public class TestController {
 	}
 
 	@DeleteMapping(value = "/revoke-certificate/{alias}")
+	@PreAuthorize("hasAuthority('REVOKE_CERTIFICATE')")
 	public ResponseEntity<String> revokeCertifikate(@PathVariable("alias") String alias,
 													@RequestBody String reason) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
 		return ResponseEntity.ok(testService.revokeCertificate(alias, reason));
