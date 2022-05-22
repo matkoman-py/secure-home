@@ -1,0 +1,45 @@
+<div class="login-form">
+  <div class="border">
+    <h1 class="title">Welcome!</h1>
+    <span class="p-float-label p-input-icon-right username">
+      <input
+        id="float-username"
+        type="text"
+        class="p-invalid"
+        [(ngModel)]="username"
+        pInputText
+      />
+      <label for="float-username">Username</label>
+    </span>
+
+    <span class="p-float-label">
+      <p-password
+        id="float-password"
+        [toggleMask]="true"
+        [feedback]="false"
+        [(ngModel)]="password"
+      ></p-password>
+      <label for="float-password">Password</label>
+    </span>
+
+    <div
+      class="inline-error"
+      [style.visibility]="!validLogin ? 'visible' : 'hidden'"
+    >
+      <small id="username-help-privileged" class="p-error"
+        >Username or password is incorrect!</small
+      >
+    </div>
+
+    <button
+      id="login-button-privileged"
+      (click)="onLogin()"
+      [disabled]="checkEmptyFields()"
+      pButton
+      pRipple
+      type="button"
+      label="Log In"
+      class="p-button-rounded login-button"
+    ></button>
+  </div>
+</div>

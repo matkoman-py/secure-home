@@ -4,23 +4,19 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.User;
+import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
 import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.exception.ResourceConflictException;
 import siitnocu.bezbednost.services.UserService;
 
 // Primer kontrolera cijim metodama mogu pristupiti samo autorizovani korisnici
@@ -40,11 +36,21 @@ public class UserController {
 	public User loadById(@PathVariable Long userId) {
 		return this.userService.findById(userId);
 	}
+	
+	@PostMapping("/user/{userId}/{estateId}")
+	public User addEstateToUser(@PathVariable Long userId, @PathVariable Long estateId) {
+		return this.userService.addEstateToUser(userId, estateId);
+	}
+	
+	@GetMapping("/user/estates/{userId}")
+	public List<EstateDTO> getEstatesForUser(@PathVariable Long userId) {
+		return this.userService.getEstatesForUser(userId);
+	}
 
 	@GetMapping("/all")
 	@PreAuthorize("hasAuthority('READ_USERS')")
-	public List<User> loadAll() {
-		return this.userService.findAll();
+	public List<User> loadAll(@RequestParam(value = "search", defaultValue = "") String search) {
+		return this.userService.findAll(search);
 	}
 
 	@GetMapping("/whoami")
@@ -56,6 +62,12 @@ public class UserController {
 	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('SAVE_USER')")
 	public User save(@RequestBody UserRequest user) {
+		User existUser = this.userService.findByUsername(user.getUsername());
+
+		if (existUser != null) {
+			throw new ResourceConflictException(user.getId(), "Username already exists");
+		}
+
 		return this.userService.save(user);
 	}
 	

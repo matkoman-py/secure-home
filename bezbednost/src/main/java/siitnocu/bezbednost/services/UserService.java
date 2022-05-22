@@ -2,6 +2,10 @@ package siitnocu.bezbednost.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -9,10 +13,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
+import siitnocu.bezbednost.repositories.EstateRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
 
 @Service
@@ -20,6 +27,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private EstateRepository estateRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -27,22 +37,53 @@ public class UserService {
 	@Autowired
 	private RoleService roleService;
 
+	private static final String PASSWORD_PATTERN =
+			"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+
+	private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username);
 	}
+	
+	public User addEstateToUser(Long userId, Long estateId) {
+		User u = findById(userId);
+		Estate e = findByIdEstate(estateId);
+		Set<Estate> estates = u.getEstates();
+		estates.add(e);
+		u.setEstates(estates);
+		return userRepository.save(u);
+		
+		
+	}
+	
+	public List<EstateDTO> getEstatesForUser(Long id) {
+		User u = findById(id);
+		return u.getEstates().stream().map(e -> new EstateDTO(e)).collect(Collectors.toList());
+	}
+	
 
+	public Estate findByIdEstate(Long id) throws AccessDeniedException {
+		return estateRepository.findById(id).orElseGet(null);
+	}
+
+	
 	public User findById(Long id) throws AccessDeniedException {
 		return userRepository.findById(id).orElseGet(null);
 	}
 
-	public List<User> findAll() throws AccessDeniedException {
-		return userRepository.findAll();
+	public List<User> findAll(String search) throws AccessDeniedException {
+		return userRepository.search(search.trim().toLowerCase());
 	}
 
 	public User save(UserRequest userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
 
+		Matcher matcher = pattern.matcher(userRequest.getPassword());
+		if(!matcher.matches()){
+			throw new RuntimeException("Password must be 8-20 chars long, contain a big, small letter and a number!");
+		}
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		
 		u.setFirstName(userRequest.getFirstname());

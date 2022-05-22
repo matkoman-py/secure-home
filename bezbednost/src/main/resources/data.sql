@@ -3,6 +3,9 @@
 
 INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', true, '2017-10-01');
 INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', true, '2017-10-01');
+INSERT INTO ESTATES (address, description, estate_type) VALUES ('VLADIKE CIRICA 5', 'OPIS', 'APARTMENT');
+INSERT INTO ESTATES (address, description, estate_type) VALUES ('Bulevar Evrope 5', 'OPIS', 'HOUSE');
+
 
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
 INSERT INTO ROLE (name) VALUES ('ROLE_OWNER');
@@ -30,6 +33,7 @@ INSERT INTO PRIVILEGE (name) VALUES ('GET_ONE_CERTIFICATE');
 INSERT INTO PRIVILEGE (name) VALUES ('GET_CERTIFICATE_EXTENSIONS');
 INSERT INTO PRIVILEGE (name) VALUES ('IS_CERTIFICATE_VALID');
 INSERT INTO PRIVILEGE (name) VALUES ('GET_CSRS');
+INSERT INTO PRIVILEGE (name) VALUES ('LOGOUT');
 
 
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 1);
@@ -51,3 +55,6 @@ INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 16);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 17);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 18);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 19);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 20);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 20);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (3, 20);

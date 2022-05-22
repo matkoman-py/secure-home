@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CertificateComponent } from './certificate/certificate.component';
@@ -20,9 +20,13 @@ import { ToastModule } from 'primeng/toast';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
-import {InputTextareaModule} from 'primeng/inputtextarea';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { LoginComponent } from './login/login.component';
+import { PasswordModule } from 'primeng/password';
+import { LogoutComponent } from './logout/logout.component';
+import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,8 @@ import { CreateUserComponent } from './create-user/create-user.component';
     CertificateInfoComponent,
     RevokedCertsComponent,
     CreateUserComponent
+    LoginComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -52,9 +58,16 @@ import { CreateUserComponent } from './create-user/create-user.component';
     RadioButtonModule,
     MultiSelectModule,
     InputTextareaModule,
-    DropdownModule
+    DropdownModule,
+    PasswordModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
