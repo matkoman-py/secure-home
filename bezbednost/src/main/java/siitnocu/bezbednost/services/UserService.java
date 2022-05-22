@@ -2,6 +2,7 @@ package siitnocu.bezbednost.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,10 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
+import siitnocu.bezbednost.repositories.EstateRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
 
 @Service
@@ -22,6 +26,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private EstateRepository estateRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -37,7 +44,29 @@ public class UserService {
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username);
 	}
+	
+	public User addEstateToUser(Long userId, Long estateId) {
+		User u = findById(userId);
+		Estate e = findByIdEstate(estateId);
+		Set<Estate> estates = u.getEstates();
+		estates.add(e);
+		u.setEstates(estates);
+		return userRepository.save(u);
+		
+		
+	}
+	
+	public List<EstateDTO> getEstatesForUser(Long id) {
+		User u = findById(id);
+		return u.getEstates().stream().map(e -> new EstateDTO(e)).toList();
+	}
+	
 
+	public Estate findByIdEstate(Long id) throws AccessDeniedException {
+		return estateRepository.findById(id).orElseGet(null);
+	}
+
+	
 	public User findById(Long id) throws AccessDeniedException {
 		return userRepository.findById(id).orElseGet(null);
 	}

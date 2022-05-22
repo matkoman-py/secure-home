@@ -4,13 +4,16 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.User;
+import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
 import siitnocu.bezbednost.dto.UserRequest;
 import siitnocu.bezbednost.exception.ResourceConflictException;
@@ -32,6 +35,16 @@ public class UserController {
 	@PreAuthorize("hasAuthority('READ_USER')")
 	public User loadById(@PathVariable Long userId) {
 		return this.userService.findById(userId);
+	}
+	
+	@PostMapping("/user/{userId}/{estateId}")
+	public User addEstateToUser(@PathVariable Long userId, @PathVariable Long estateId) {
+		return this.userService.addEstateToUser(userId, estateId);
+	}
+	
+	@GetMapping("/user/estates/{userId}")
+	public List<EstateDTO> getEstatesForUser(@PathVariable Long userId) {
+		return this.userService.getEstatesForUser(userId);
 	}
 
 	@GetMapping("/all")

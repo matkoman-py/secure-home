@@ -3,6 +3,7 @@ package siitnocu.bezbednost.data;
 import java.sql.Timestamp;
 import java.util.*;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,6 +58,12 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_estate", 
+       		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+       		inverseJoinColumns = @JoinColumn(name = "estate_id", referencedColumnName = "id"))
+    private Set<Estate> estates = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -160,6 +167,16 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+    
+    
+
+	public Set<Estate> getEstates() {
+		return estates;
+	}
+
+	public void setEstates(Set<Estate> estates) {
+		this.estates = estates;
+	}
 
 	public User(String username, String password, String firstName, String lastName, String email, boolean enabled,
 			Timestamp lastPasswordResetDate, List<Role> roles) {
@@ -172,6 +189,23 @@ public class User implements UserDetails {
 		this.enabled = enabled;
 		this.lastPasswordResetDate = lastPasswordResetDate;
 		this.roles = roles;
+	}
+	
+	
+
+	public User(Long id, String username, String password, String firstName, String lastName, String email,
+			boolean enabled, Timestamp lastPasswordResetDate, List<Role> roles, Set<Estate> estates) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.enabled = enabled;
+		this.lastPasswordResetDate = lastPasswordResetDate;
+		this.roles = roles;
+		this.estates = estates;
 	}
 
 	public User() {
