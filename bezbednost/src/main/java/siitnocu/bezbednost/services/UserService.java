@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -58,7 +59,7 @@ public class UserService {
 	
 	public List<EstateDTO> getEstatesForUser(Long id) {
 		User u = findById(id);
-		return u.getEstates().stream().map(e -> new EstateDTO(e)).toList();
+		return u.getEstates().stream().map(e -> new EstateDTO(e)).collect(Collectors.toList());
 	}
 	
 
