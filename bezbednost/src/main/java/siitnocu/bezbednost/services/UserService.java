@@ -2,6 +2,8 @@ package siitnocu.bezbednost.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,6 +29,11 @@ public class UserService {
 	@Autowired
 	private RoleService roleService;
 
+	private static final String PASSWORD_PATTERN =
+			"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+
+	private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username);
 	}
@@ -35,14 +42,18 @@ public class UserService {
 		return userRepository.findById(id).orElseGet(null);
 	}
 
-	public List<User> findAll() throws AccessDeniedException {
-		return userRepository.findAll();
+	public List<User> findAll(String search) throws AccessDeniedException {
+		return userRepository.search(search.trim().toLowerCase());
 	}
 
 	public User save(UserRequest userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
 
+		Matcher matcher = pattern.matcher(userRequest.getPassword());
+		if(!matcher.matches()){
+			throw new RuntimeException("Password must be 8-20 chars long, contain a big, small letter and a number!");
+		}
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		
 		u.setFirstName(userRequest.getFirstname());

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import siitnocu.bezbednost.repositories.NonValidTokenRepository;
 import siitnocu.bezbednost.utils.TokenUtils;
 
 // Filter koji ce presretati SVAKI zahtev klijenta ka serveru 
@@ -27,7 +28,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	private TokenUtils tokenUtils;
 
 	private UserDetailsService userDetailsService;
-	
+
+
 	protected final Log LOGGER = LogFactory.getLog(getClass());
 
 	public TokenAuthenticationFilter(TokenUtils tokenHelper, UserDetailsService userDetailsService) {
@@ -44,6 +46,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		
 		// 1. Preuzimanje JWT tokena i cookie iz zahteva
 		String authToken = tokenUtils.getToken(request);
+
 		String fingerprint = tokenUtils.getFingerprintFromCookie(request);
 
 		try {

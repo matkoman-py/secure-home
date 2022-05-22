@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
@@ -22,6 +23,7 @@ import siitnocu.bezbednost.data.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import siitnocu.bezbednost.repositories.NonValidTokenRepository;
 
 
 // Utility klasa za rad sa JSON Web Tokenima
@@ -62,6 +64,8 @@ public class TokenUtils {
 
     private final SecureRandom secureRandom = new SecureRandom();
 
+    @Autowired
+    private NonValidTokenRepository nonValidTokenRepository;
 
     // ============= Funkcije za generisanje JWT tokena =============
 
@@ -336,6 +340,9 @@ public class TokenUtils {
      * @return Informacija da li je token validan ili ne.
      */
     public Boolean validateToken(String token, UserDetails userDetails, String fingerprint) {
+        if(nonValidTokenRepository.findByToken(token).isPresent()){
+            return false;
+        }
         User user = (User) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
