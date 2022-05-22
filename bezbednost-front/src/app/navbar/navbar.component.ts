@@ -33,6 +33,11 @@ export class NavbarComponent implements OnInit {
       routerLink: '/revoked-certificates',
     },
     {
+      label: 'Users',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/create-user',
+    },
+    {
       label: 'Login',
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/login',
@@ -92,6 +97,12 @@ export class NavbarComponent implements OnInit {
           label: 'Logout',
           icon: 'pi pi-fw pi-sign-out',
           routerLink: '/logout',
+        },
+        {
+          label: 'Users',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/create-user',
+          visible: this.role === 'ROLE_ADMIN',
         },
       ];
     }

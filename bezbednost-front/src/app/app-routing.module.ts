@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './app-routing/auth.guard';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
 import { CertificateComponent } from './certificate/certificate.component';
+import { CreateUserComponent } from './create-user/create-user.component';
 import { CsrComponent } from './csr/csr.component';
 import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
 import { LoginComponent } from './login/login.component';
@@ -10,6 +11,14 @@ import { LogoutComponent } from './logout/logout.component';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 
 const routes: Routes = [
+  {
+    path: 'create-user',
+    component: CreateUserComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRoles: ['ROLE_ADMIN'],
+    },
+  },
   {
     path: 'certificates',
     component: CertificateComponent,

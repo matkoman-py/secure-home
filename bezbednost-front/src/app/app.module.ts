@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
+import { CreateUserComponent } from './create-user/create-user.component';
 import { LoginComponent } from './login/login.component';
 import { PasswordModule } from 'primeng/password';
 import { LogoutComponent } from './logout/logout.component';
@@ -37,6 +38,7 @@ import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
     GenerateCsrComponent,
     CertificateInfoComponent,
     RevokedCertsComponent,
+    CreateUserComponent
     LoginComponent,
     LogoutComponent,
   ],
