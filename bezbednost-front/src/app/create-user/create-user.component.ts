@@ -12,91 +12,102 @@ import { CreateUserService } from './services/create-user.service';
   providers: [MessageService],
 })
 export class CreateUserComponent implements OnInit {
-
   searchTerm: string = '';
   users: User[] = [];
-  roles: RoleOptions[] = [{
+  roles: RoleOptions[] = [
+    {
       name: 'ROLE_OWNER',
-      code: 'ROLE_OWNER'
+      code: 'ROLE_OWNER',
     },
     {
       name: 'ROLE_RESIDENT',
-      code: 'ROLE_RESIDENT'
-    }
+      code: 'ROLE_RESIDENT',
+    },
   ];
   selectedRoles: RoleOptions[] = [];
-  PASSWORD_PATTERN: string = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+  PASSWORD_PATTERN: string = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$';
   userInfo: UserRequest = {
     username: '',
     password: '',
     firstname: '',
     lastname: '',
-    email: ''
+    email: '',
   };
-  constructor(private createUserService: CreateUserService,
-    private messageService: MessageService) {}
+  constructor(
+    private createUserService: CreateUserService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
-    this.createUserService.getAll(this.searchTerm).subscribe(res => {
+    this.createUserService.getAll(this.searchTerm).subscribe((res) => {
       this.users = res;
-    })
+    });
   }
 
   getAll() {
-    this.createUserService.getAll(this.searchTerm).subscribe(res => {
+    this.createUserService.getAll(this.searchTerm).subscribe((res) => {
       this.users = res;
-    })
+    });
   }
 
   delete(id: number) {
-    this.createUserService.delete(id).subscribe(res => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'success',
-        summary: 'Success',
-        detail: 'User succesfully deleated',
-      });
-    }, err => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'error',
-        summary: 'Warning',
-        detail: 'Error during user deletion',
-      });
-    })
+    this.createUserService.delete(id).subscribe(
+      (res) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'User succesfully deleted',
+        });
+      },
+      (err) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: err.error,
+        });
+      }
+    );
   }
 
   createUser() {
-    this.userInfo.roles = this.selectedRoles.map(role => role.name);
-    this.createUserService.createUser(this.userInfo).subscribe(res => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'success',
-        summary: 'Success',
-        detail: 'User succesfully created',
-      });
-    }, err => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'error',
-        summary: 'Warning',
-        detail: 'Error during user creation',
-      });
-    })
+    this.userInfo.roles = this.selectedRoles.map((role) => role.name);
+    this.createUserService.createUser(this.userInfo).subscribe(
+      (res) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'User succesfully created',
+        });
+      },
+      (err) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: err.error,
+        });
+      }
+    );
 
     this.userInfo = {
       username: '',
       password: '',
       firstname: '',
       lastname: '',
-      email: ''
-    }
+      email: '',
+    };
   }
 
   isInfoValid() {
-    if (this.userInfo.username == null || this.userInfo.username == '') return false;
-    if (this.userInfo.firstname == null || this.userInfo.firstname == '') return false;
-    if (this.userInfo.lastname == null || this.userInfo.lastname == '') return false;
+    if (this.userInfo.username == null || this.userInfo.username == '')
+      return false;
+    if (this.userInfo.firstname == null || this.userInfo.firstname == '')
+      return false;
+    if (this.userInfo.lastname == null || this.userInfo.lastname == '')
+      return false;
     if (this.userInfo.email == null || this.userInfo.email == '') return false;
     if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) return false;
 

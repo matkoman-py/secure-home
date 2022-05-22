@@ -1,43 +1,77 @@
 <p-toast position="top-center" key="tc"></p-toast>
 <h2>Users</h2>
-<div style="width: 10%;float: left;" class="p-formgroup-inline search">
+<div style="width: 10%; float: left" class="p-formgroup-inline search">
   <div class="p-field">
-    <input type="text" pInputText [(ngModel)]="userInfo.username" placeholder="Username" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="userInfo.username"
+      placeholder="Username"
+    />
   </div>
-  <br>
+  <br />
   <div class="p-field">
-    <input type="text" pInputText [(ngModel)]="userInfo.password" placeholder="Password" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="userInfo.password"
+      placeholder="Password"
+    />
   </div>
-  <br>
+  <br />
   <div class="p-field">
-    <input type="text" pInputText [(ngModel)]="userInfo.firstname" placeholder="First Name" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="userInfo.firstname"
+      placeholder="First Name"
+    />
   </div>
-  <br>
+  <br />
   <div class="p-field">
-    <input type="text" pInputText [(ngModel)]="userInfo.lastname" placeholder="Last Name" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="userInfo.lastname"
+      placeholder="Last Name"
+    />
   </div>
-  <br>
+  <br />
   <div class="p-field">
-    <input type="text" pInputText [(ngModel)]="userInfo.email" placeholder="Email" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="userInfo.email"
+      placeholder="Email"
+    />
   </div>
-  <br>
-  <p-multiSelect defaultLabel="Select a Role" [options]="roles" [(ngModel)]="selectedRoles" optionLabel="name">
+  <br />
+  <p-multiSelect
+    defaultLabel="Select a Role"
+    [options]="roles"
+    [(ngModel)]="selectedRoles"
+    optionLabel="name"
+  >
   </p-multiSelect>
-  <br>
-  <br>
+  <br />
+  <br />
   <div class="p-field">
-    <p-button label="Submit" (onClick)="createUser()" [disabled]="!isInfoValid()"></p-button>
+    <p-button
+      label="Submit"
+      (onClick)="createUser()"
+      [disabled]="!isInfoValid()"
+    ></p-button>
   </div>
 </div>
-<div style="display: flex;left: 700px; position: absolute;top: 100px;">
+<div style="display: flex; left: 700px; position: absolute; top: 100px">
   <div class="p-field">
     <input type="text" pInputText [(ngModel)]="searchTerm" />
   </div>
-  <div class="p-field" style="margin-left: 10px;">
+  <div class="p-field" style="margin-left: 10px">
     <p-button label="Search" (onClick)="getAll()"></p-button>
   </div>
 </div>
-<div style="width: 85%;float: right;">
+<div style="width: 85%; float: right">
   <p-table [value]="users">
     <ng-template pTemplate="header">
       <tr>
@@ -51,13 +85,27 @@
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr>
-        <td>{{user.username}}</td>
-        <td>{{user.firstname}}</td>
-        <td>{{user.lastname}}</td>
-        <td>{{user.email}}</td>
-        <td>{{user.roles}}</td>
-        <td><button pButton pRipple type="button" label="Delete" class="p-button-danger"
-            (click)="delete(user.id)"></button>
+        <td>{{ user.username }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let role of user.roles">
+              {{ role.name }}
+            </li>
+          </ul>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Delete"
+            class="p-button-danger"
+            (click)="delete(user.id)"
+          ></button>
+        </td>
       </tr>
     </ng-template>
   </p-table>
