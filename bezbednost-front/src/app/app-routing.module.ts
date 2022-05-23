@@ -32,7 +32,7 @@ const routes: Routes = [
     component: GenerateCsrComponent,
     canActivate: [AuthGuard],
     data: {
-      expectedRoles: ['ROLE_ADMIN'],
+      expectedRoles: ['ROLE_ADMIN', 'ROLE_USER'],
     },
   },
   {

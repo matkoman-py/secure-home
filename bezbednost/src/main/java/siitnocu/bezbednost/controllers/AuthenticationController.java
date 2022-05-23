@@ -32,6 +32,8 @@ import siitnocu.bezbednost.utils.TokenUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 //Kontroler zaduzen za autentifikaciju korisnika
@@ -57,12 +59,30 @@ public class AuthenticationController {
     @Autowired
     private UnsuccessfullLoginRepository unsuccessfullLoginRepository;
 
+    private static final String USERNAME_PATTERN =
+            "^[A-Za-z0-9_.]+$";
+    private static final Pattern usernamePattern = Pattern.compile(USERNAME_PATTERN);
+
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+    private static final Pattern passwordPattern = Pattern.compile(PASSWORD_PATTERN);
+
     // Prvi endpoint koji pogadja korisnik kada se loguje.
     // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
         try{
+
+            Matcher matcher = usernamePattern.matcher(authenticationRequest.getUsername());
+            if(!matcher.matches()){
+                throw new RuntimeException("Usernames can only use letters, numbers, underscores, and periods.");
+            }
+
+            matcher = passwordPattern.matcher(authenticationRequest.getPassword());
+            if(!matcher.matches()){
+                throw new RuntimeException("Invalid character in password attempt!");
+            }
             // Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
             // AuthenticationException
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

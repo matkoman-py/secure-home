@@ -13,16 +13,45 @@ import { Login } from '../model/login';
 export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
+  PASSWORD_PATTERN: string = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$';
 
   validLogin: boolean = true;
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   onLogin = () => {
     const auth: Login = {
       username: this.username,
       password: this.password,
     };
+
+    if (!/^[A-Za-z0-9_.]+$/.test(auth.username)) {
+      // Usernames can only use letters, numbers, underscores, and periods.
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail:
+          'Username is in bad format (Must contain only alphanumerical characters and special characters like ., - and _)',
+      });
+      return;
+    }
+
+    if (!auth.password.match(this.PASSWORD_PATTERN)) {
+      //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail:
+          'Password is in bad format (Must contain at least 8 characters, with one small letter, one capital letter and at least 3 numbers)',
+      });
+      return;
+    }
 
     this.loginService.userLogin(auth).subscribe(
       (response: any) => {
@@ -38,14 +67,19 @@ export class LoginComponent implements OnInit {
 
           if (role == 'ROLE_ADMIN') {
             this.router.navigate(['certificates']);
-          } else if (role === 'zdravstveni_radnik') {
-            this.router.navigate(['certificates']);
+          } else if (role === 'ROLE_USER') {
+            this.router.navigate(['generate-csr']);
           }
           console.log(role + ' je uloga');
         }
       },
-      () => {
-        this.validLogin = false;
+      (err) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: err.error,
+        });
       }
     );
   };

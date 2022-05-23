@@ -40,7 +40,19 @@ public class UserService {
 	private static final String PASSWORD_PATTERN =
 			"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
 
-	private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+	private static final String EMAIL_PATTERN =
+			"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+
+	private static final String USERNAME_PATTERN =
+			"^[A-Za-z0-9_.]+$";
+
+	private static final String NAME_PATTERN =
+			"^(?=.{1,40}$)[a-zA-Z]+(?:[-\\s][a-zA-Z]+)*$";
+
+	private static final Pattern usernamePattern = Pattern.compile(USERNAME_PATTERN);
+	private static final Pattern passwordPattern = Pattern.compile(PASSWORD_PATTERN);
+	private static final Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
+	private static final Pattern namePattern = Pattern.compile(NAME_PATTERN);
 
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username);
@@ -78,17 +90,36 @@ public class UserService {
 
 	public User save(UserRequest userRequest) {
 		User u = new User();
+
+		Matcher matcher = usernamePattern.matcher(userRequest.getUsername());
+		if(!matcher.matches()){
+			throw new RuntimeException("Usernames can only use letters, numbers, underscores, and periods.");
+		}
 		u.setUsername(userRequest.getUsername());
 
-		Matcher matcher = pattern.matcher(userRequest.getPassword());
+		matcher = passwordPattern.matcher(userRequest.getPassword());
 		if(!matcher.matches()){
 			throw new RuntimeException("Password must be 8-20 chars long, contain a big, small letter and a number!");
 		}
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		
+
+		matcher = namePattern.matcher(userRequest.getFirstname());
+		if(!matcher.matches()){
+			throw new RuntimeException("First name is in bad format (Must contain only alphabetic characters and hyphen)!");
+		}
 		u.setFirstName(userRequest.getFirstname());
+
+		matcher = namePattern.matcher(userRequest.getLastname());
+		if(!matcher.matches()){
+			throw new RuntimeException("Last name is in bad format (Must contain only alphabetic characters and hyphen)!");
+		}
 		u.setLastName(userRequest.getLastname());
 		u.setEnabled(true);
+
+		matcher = emailPattern.matcher(userRequest.getEmail());
+		if(!matcher.matches()){
+			throw new RuntimeException("User email is in bad format!");
+		}
 		u.setEmail(userRequest.getEmail());
 
 		List<Role> roles = new ArrayList<>();
@@ -123,5 +154,17 @@ public class UserService {
 			return "User with id: " + roleData.getId() + " succesfully updated!";
 		}
 		return "User with id: " + roleData.getId() + " not found!";
+	}
+
+	public User activateUser(Long id) {
+		User u = findById(id);
+
+		if(u == null){
+			throw new RuntimeException("User with id: "+ id + "doesn't exist");
+		}
+
+		u.setEnabled(true);
+		userRepository.save(u);
+		return u;
 	}
 }

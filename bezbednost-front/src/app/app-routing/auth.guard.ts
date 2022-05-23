@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
       if (tokenPayload === 'ROLE_ADMIN') {
         this.router.navigate(['certificates']);
       } else {
-        this.router.navigate(['certificates']);
+        this.router.navigate(['generate-csr']);
       }
       return false;
     }

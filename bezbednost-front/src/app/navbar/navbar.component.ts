@@ -85,7 +85,7 @@ export class NavbarComponent implements OnInit {
           label: 'Generate CSR',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/generate-csr',
-          visible: this.role === 'ROLE_ADMIN',
+          visible: this.role === 'ROLE_ADMIN' || this.role === 'ROLE_USER',
         },
         {
           label: 'Revoked Certificates',

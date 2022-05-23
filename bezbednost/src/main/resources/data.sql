@@ -1,8 +1,9 @@
 -- Lozinke su hesovane pomocu BCrypt algoritma https://www.dailycred.com/article/bcrypt-calculator
--- Lozinka za oba user-a je 123
+-- Lozinka za user - User1234
+                -- admin - Admin123
 
-INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', true, '2017-10-01');
-INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', true, '2017-10-01');
+INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('user', '$2a$12$RXqktT4alBoBQT/9uVSfRet5tIpCO96GqUm6/eNY7ONIAtMA53Od6', 'Marko', 'Markovic', 'user@example.com', true, '2017-10-01');
+INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('admin', '$2a$12$VO3ygoEyGYDIDdVTumD99Oguaab9SVqIjqNv3uNDrXqGMkbXJL2A.', 'Nikola', 'Nikolic', 'admin@example.com', true, '2017-10-01');
 INSERT INTO ESTATES (address, description, estate_type) VALUES ('VLADIKE CIRICA 5', 'OPIS', 'APARTMENT');
 INSERT INTO ESTATES (address, description, estate_type) VALUES ('Bulevar Evrope 5', 'OPIS', 'HOUSE');
 
@@ -34,6 +35,7 @@ INSERT INTO PRIVILEGE (name) VALUES ('GET_CERTIFICATE_EXTENSIONS');
 INSERT INTO PRIVILEGE (name) VALUES ('IS_CERTIFICATE_VALID');
 INSERT INTO PRIVILEGE (name) VALUES ('GET_CSRS');
 INSERT INTO PRIVILEGE (name) VALUES ('LOGOUT');
+INSERT INTO PRIVILEGE (name) VALUES ('ACTIVATE_USER');
 
 
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 1);
@@ -58,3 +60,4 @@ INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 19);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 20);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 20);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (3, 20);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 21);

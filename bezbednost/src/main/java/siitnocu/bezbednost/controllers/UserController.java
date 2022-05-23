@@ -76,7 +76,13 @@ public class UserController {
 	public String delete(@PathVariable Long Id) {
 		return this.userService.delete(Id);
 	}
-	
+
+	@PutMapping("/activate/{Id}")
+	@PreAuthorize("hasAuthority('ACTIVATE_USER')")
+	public User activate(@PathVariable Long Id) {
+		return this.userService.activateUser(Id);
+	}
+
 	@PutMapping("/update")
 	@PreAuthorize("hasAuthority('UPDATE_USER')")
 	public String update(@RequestBody RoleUpdateInfo roleUpdateInfo) {
