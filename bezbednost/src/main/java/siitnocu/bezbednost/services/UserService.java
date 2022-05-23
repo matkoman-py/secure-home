@@ -141,7 +141,8 @@ public class UserService {
 		return "User with id: " + Id + " not found!";
 	}
 	
-	public String update(RoleUpdateInfo roleData) {
+	public User update(RoleUpdateInfo roleData) {
+		System.out.println("EVO MEEEEEE" + roleData.getId());
 		User u = findById(roleData.getId());
 		
 		if(u != null) {
@@ -151,9 +152,9 @@ public class UserService {
 			}
 			u.setRoles(oldRoles);
 			userRepository.save(u);
-			return "User with id: " + roleData.getId() + " succesfully updated!";
+			return u;
 		}
-		return "User with id: " + roleData.getId() + " not found!";
+		throw new RuntimeException("User with id: " + roleData.getId() + " not found!");
 	}
 
 	public User activateUser(Long id) {

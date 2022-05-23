@@ -85,7 +85,7 @@ public class UserController {
 
 	@PutMapping("/update")
 	@PreAuthorize("hasAuthority('UPDATE_USER')")
-	public String update(@RequestBody RoleUpdateInfo roleUpdateInfo) {
+	public User update(@RequestBody RoleUpdateInfo roleUpdateInfo) {
 		return this.userService.update(roleUpdateInfo);
 	}
 }
