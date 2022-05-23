@@ -19,7 +19,8 @@ export class CreateUserService {
     return this.http.get<User[]>('/api/users/all', {params: param});
   }
 
-  delete(id: number): Observable<Object> {
-    return this.http.delete('/api/users/delete/' + id);
+  delete(id: number): Observable<String> {
+    return this.http.delete('/api/users/delete/' + id, {responseType: 'text'});
   }
+
 }

@@ -45,6 +45,17 @@ export class CreateUserComponent implements OnInit {
   }
 
   getAll() {
+    if(this.searchTerm.trim() != "") {
+      if(!/^[A-Za-z0-9_.]+$/.test(this.searchTerm)) {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: 'Search is in bad format',
+        });
+        return;
+      }
+    }
     this.createUserService.getAll(this.searchTerm).subscribe((res) => {
       this.users = res;
     });
@@ -59,6 +70,7 @@ export class CreateUserComponent implements OnInit {
           summary: 'Success',
           detail: 'User succesfully deleted',
         });
+        this.getAll();
       },
       (err) => {
         this.messageService.add({
@@ -73,6 +85,58 @@ export class CreateUserComponent implements OnInit {
 
   createUser() {
     this.userInfo.roles = this.selectedRoles.map((role) => role.name);
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.userInfo.email)) {
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: 'User email is in bad format',
+      });
+      return;
+    }
+    //^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$
+    if (!/^[A-Za-z0-9_.]+$/.test(this.userInfo.username)) { // Usernames can only use letters, numbers, underscores, and periods.
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: 'Username is in bad format (Must contain only alphanumerical characters and special characters like ., - and _)',
+      });
+      return;
+    }
+    
+    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
+    if (!/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(this.userInfo.firstname)) { //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: 'First name is in bad format (Must contain only alphabetic characters and hyphen)',
+      });
+      return;
+    }
+    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
+    if (!/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(this.userInfo.lastname)) { //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: 'Last name is in bad format (Must contain only alphabetic characters and hyphen)',
+      });
+      return;
+    }
+
+    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
+    if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) { //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: 'Password is in bad format (Must contain at least 8 characters, with one small letter, one capital letter and at least 3 numbers)',
+      });
+      return;
+    }
+    
     this.createUserService.createUser(this.userInfo).subscribe(
       (res) => {
         this.messageService.add({
@@ -81,6 +145,7 @@ export class CreateUserComponent implements OnInit {
           summary: 'Success',
           detail: 'User succesfully created',
         });
+        this.getAll();
       },
       (err) => {
         this.messageService.add({
@@ -109,7 +174,7 @@ export class CreateUserComponent implements OnInit {
     if (this.userInfo.lastname == null || this.userInfo.lastname == '')
       return false;
     if (this.userInfo.email == null || this.userInfo.email == '') return false;
-    if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) return false;
+    //if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) return false;
 
     return true;
   }
