@@ -28,6 +28,11 @@ export class NavbarComponent implements OnInit {
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/revoked-certificates',
     },
+    {
+      label: 'Users',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/create-user',
+    },
   ];
 
   constructor() {}

@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
+import { CreateUserComponent } from './create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { DropdownModule } from 'primeng/dropdown';
     GenerateCsrComponent,
     CertificateInfoComponent,
     RevokedCertsComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserAnimationsModule,
