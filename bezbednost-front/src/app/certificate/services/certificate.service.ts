@@ -24,6 +24,4 @@ export class CertificateService {
   deleteCertificate(e: string, reason: string): Observable<String> {
     return this.http.delete('/api/test/revoke-certificate/'+e, {body: reason, responseType: 'text'});
   }
-  
-
 }

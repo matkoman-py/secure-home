@@ -1,20 +1,9 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-import {
-  MessageService
-} from 'primeng/api';
-import {
-  RoleOptions
-} from '../model/RoleOptions';
-import { User } from '../model/user';
-import {
-  UserRequest
-} from '../model/UserRequest';
-import {
-  CreateUserService
-} from './services/create-user.service';
+import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { RoleOptions } from '../model/RoleOptions';
+import { User } from '../model/User';
+import { UserRequest } from '../model/UserRequest';
+import { CreateUserService } from './services/create-user.service';
 
 @Component({
   selector: 'app-create-user',
@@ -24,7 +13,7 @@ import {
 })
 export class CreateUserComponent implements OnInit {
 
-    searchTerm:string = '';
+  searchTerm: string = '';
   users: User[] = [];
   roles: RoleOptions[] = [{
       name: 'ROLE_OWNER',
@@ -55,8 +44,8 @@ export class CreateUserComponent implements OnInit {
 
   getAll() {
     this.createUserService.getAll(this.searchTerm).subscribe(res => {
-        this.users = res;
-      })
+      this.users = res;
+    })
   }
 
   delete(id: number) {
