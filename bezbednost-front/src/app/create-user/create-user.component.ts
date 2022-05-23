@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { RoleOptions } from '../model/RoleOptions';
+import { RoleUpdateInfo } from '../model/RoleUpdateInfo';
 import { User } from '../model/User';
 import { UserRequest } from '../model/UserRequest';
 import { CreateUserService } from './services/create-user.service';
@@ -12,8 +13,10 @@ import { CreateUserService } from './services/create-user.service';
   providers: [MessageService],
 })
 export class CreateUserComponent implements OnInit {
+  updateId: number = 0;
   searchTerm: string = '';
   users: User[] = [];
+  display: boolean = false;
   roles: RoleOptions[] = [
     {
       name: 'ROLE_OWNER',
@@ -42,6 +45,36 @@ export class CreateUserComponent implements OnInit {
     this.createUserService.getAll(this.searchTerm).subscribe((res) => {
       this.users = res;
     });
+  }
+
+  update() {
+    let roleUpdateInfo: RoleUpdateInfo = {
+      id: this.updateId,
+      roles: this.selectedRoles.map((role) => role.name)
+    }
+    this.createUserService.update(roleUpdateInfo).subscribe((res) => {
+      this.messageService.add({
+        key: 'tc',
+        severity: 'success',
+        summary: 'Success',
+        detail: 'User succesfully updated',
+      });
+      this.getAll();
+    },
+    (err) => {
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail: err.error,
+      });
+    }
+  );
+  }
+
+  showDialog(id: number) {
+    this.display = true;
+    this.updateId = id;
   }
 
   getAll() {
