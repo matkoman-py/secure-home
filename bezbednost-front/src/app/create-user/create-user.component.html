@@ -1,4 +1,20 @@
 <p-toast position="top-center" key="tc"></p-toast>
+<p-dialog header="Update user role" [(visible)]="display">
+  <div style="height: 210px;display: flex;">
+  <p-multiSelect
+    defaultLabel="Select a Role"
+    [options]="roles"
+    [(ngModel)]="selectedRoles"
+    optionLabel="name"
+  >
+  <br>
+  <br>
+  </p-multiSelect>
+  <div class="p-field">
+    <p-button style="margin-left: 10px;" label="Update" (onClick)="update()"></p-button>
+  </div>
+</div>
+</p-dialog>
 <h2>Users</h2>
 <div style="width: 10%; float: left" class="p-formgroup-inline search">
   <div class="p-field">
@@ -81,6 +97,7 @@
         <th>Email</th>
         <th>Roles</th>
         <th></th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-user>
@@ -104,6 +121,16 @@
             label="Delete"
             class="p-button-danger"
             (click)="delete(user.id)"
+          ></button>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Update"
+            class="p-button-warning"
+            (click)="showDialog(user.id)"
           ></button>
         </td>
       </tr>

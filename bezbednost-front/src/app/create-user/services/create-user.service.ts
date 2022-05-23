@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UserRequest } from "../../model/UserRequest";
 import { User } from "../../model/User";
+import { RoleUpdateInfo } from "src/app/model/RoleUpdateInfo";
 
 @Injectable({
   providedIn: 'root',
@@ -23,4 +24,7 @@ export class CreateUserService {
     return this.http.delete('/api/users/delete/' + id, {responseType: 'text'});
   }
 
+  update(roleUpdateInfo: RoleUpdateInfo): Observable<String> {
+    return this.http.put<String>('/api/users/update', roleUpdateInfo);
+  }
 }
