@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { RoleOptions } from '../model/RoleOptions';
 import { RoleUpdateInfo } from '../model/RoleUpdateInfo';
@@ -38,7 +39,8 @@ export class CreateUserComponent implements OnInit {
   };
   constructor(
     private createUserService: CreateUserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -50,26 +52,27 @@ export class CreateUserComponent implements OnInit {
   update() {
     let roleUpdateInfo: RoleUpdateInfo = {
       id: this.updateId,
-      roles: this.selectedRoles.map((role) => role.name)
-    }
-    this.createUserService.update(roleUpdateInfo).subscribe((res) => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'success',
-        summary: 'Success',
-        detail: 'User succesfully updated',
-      });
-      this.getAll();
-    },
-    (err) => {
-      this.messageService.add({
-        key: 'tc',
-        severity: 'error',
-        summary: 'Warning',
-        detail: err.error,
-      });
-    }
-  );
+      roles: this.selectedRoles.map((role) => role.name),
+    };
+    this.createUserService.update(roleUpdateInfo).subscribe(
+      (res) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'User succesfully updated',
+        });
+        this.getAll();
+      },
+      (err) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: err.error,
+        });
+      }
+    );
   }
 
   showDialog(id: number) {
@@ -78,8 +81,8 @@ export class CreateUserComponent implements OnInit {
   }
 
   getAll() {
-    if(this.searchTerm.trim() != "") {
-      if(!/^[A-Za-z0-9_.]+$/.test(this.searchTerm)) {
+    if (this.searchTerm.trim() != '') {
+      if (!/^[A-Za-z0-9_.]+$/.test(this.searchTerm)) {
         this.messageService.add({
           key: 'tc',
           severity: 'error',
@@ -116,9 +119,32 @@ export class CreateUserComponent implements OnInit {
     );
   }
 
+  activate(id: number) {
+    this.createUserService.activate(id).subscribe(
+      (res) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'success',
+          summary: 'Success',
+          detail: 'User succesfully activated!',
+        });
+        this.getAll();
+      },
+      (err) => {
+        this.messageService.add({
+          key: 'tc',
+          severity: 'error',
+          summary: 'Warning',
+          detail: err.error,
+        });
+      }
+    );
+  }
   createUser() {
     this.userInfo.roles = this.selectedRoles.map((role) => role.name);
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.userInfo.email)) {
+    if (
+      !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.userInfo.email)
+    ) {
       this.messageService.add({
         key: 'tc',
         severity: 'error',
@@ -128,48 +154,64 @@ export class CreateUserComponent implements OnInit {
       return;
     }
     //^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$
-    if (!/^[A-Za-z0-9_.]+$/.test(this.userInfo.username)) { // Usernames can only use letters, numbers, underscores, and periods.
+    if (!/^[A-Za-z0-9_.]+$/.test(this.userInfo.username)) {
+      // Usernames can only use letters, numbers, underscores, and periods.
       this.messageService.add({
         key: 'tc',
         severity: 'error',
         summary: 'Warning',
-        detail: 'Username is in bad format (Must contain only alphanumerical characters and special characters like ., - and _)',
-      });
-      return;
-    }
-    
-    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
-    if (!/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(this.userInfo.firstname)) { //First name can only use letters and hypen
-      this.messageService.add({
-        key: 'tc',
-        severity: 'error',
-        summary: 'Warning',
-        detail: 'First name is in bad format (Must contain only alphabetic characters and hyphen)',
-      });
-      return;
-    }
-    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
-    if (!/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(this.userInfo.lastname)) { //First name can only use letters and hypen
-      this.messageService.add({
-        key: 'tc',
-        severity: 'error',
-        summary: 'Warning',
-        detail: 'Last name is in bad format (Must contain only alphabetic characters and hyphen)',
+        detail:
+          'Username is in bad format (Must contain only alphanumerical characters and special characters like ., - and _)',
       });
       return;
     }
 
     // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
-    if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) { //First name can only use letters and hypen
+    if (
+      !/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(
+        this.userInfo.firstname
+      )
+    ) {
+      //First name can only use letters and hypen
       this.messageService.add({
         key: 'tc',
         severity: 'error',
         summary: 'Warning',
-        detail: 'Password is in bad format (Must contain at least 8 characters, with one small letter, one capital letter and at least 3 numbers)',
+        detail:
+          'First name is in bad format (Must contain only alphabetic characters and hyphen)',
       });
       return;
     }
-    
+    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
+    if (
+      !/^(?=.{1,40}$)[a-zA-Z]+(?:[-\s][a-zA-Z]+)*$/i.test(
+        this.userInfo.lastname
+      )
+    ) {
+      //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail:
+          'Last name is in bad format (Must contain only alphabetic characters and hyphen)',
+      });
+      return;
+    }
+
+    // ^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$
+    if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) {
+      //First name can only use letters and hypen
+      this.messageService.add({
+        key: 'tc',
+        severity: 'error',
+        summary: 'Warning',
+        detail:
+          'Password is in bad format (Must contain at least 8 characters, with one small letter, one capital letter and at least 3 numbers)',
+      });
+      return;
+    }
+
     this.createUserService.createUser(this.userInfo).subscribe(
       (res) => {
         this.messageService.add({
@@ -210,5 +252,9 @@ export class CreateUserComponent implements OnInit {
     //if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) return false;
 
     return true;
+  }
+
+  go(id:number) {
+    this.router.navigateByUrl('/user-estates/'+id);
   }
 }

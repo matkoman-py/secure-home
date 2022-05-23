@@ -57,12 +57,12 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         var role = this.findUserRole(response.body.accessToken);
         if (role !== undefined) {
-          localStorage.setItem('role', role);
-          localStorage.setItem('isLoggedIn', 'true');
-          localStorage.setItem('token', response.body.accessToken);
+          sessionStorage.setItem('role', role);
+          sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('token', response.body.accessToken);
           let user: any;
           user = jwt_decode(response.body.accessToken);
-          localStorage.setItem('username', user.sub);
+          sessionStorage.setItem('username', user.sub);
           this.loginService.emitLogin();
 
           if (role == 'ROLE_ADMIN') {

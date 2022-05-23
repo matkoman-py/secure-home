@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
   }
 
   setNavbarItems = () => {
-    this.role = localStorage.getItem('role');
+    this.role = sessionStorage.getItem('role');
 
     if (this.role === '') {
       this.items = [

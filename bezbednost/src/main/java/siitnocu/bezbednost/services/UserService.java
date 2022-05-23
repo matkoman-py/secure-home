@@ -19,6 +19,7 @@ import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.UserRequest;
 import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
+import siitnocu.bezbednost.dto.UserDTO;
 import siitnocu.bezbednost.repositories.EstateRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
 
@@ -58,13 +59,14 @@ public class UserService {
 		return userRepository.findByUsername(username);
 	}
 	
-	public User addEstateToUser(Long userId, Long estateId) {
+	public EstateDTO addEstateToUser(Long userId, Long estateId) {
 		User u = findById(userId);
 		Estate e = findByIdEstate(estateId);
 		Set<Estate> estates = u.getEstates();
 		estates.add(e);
 		u.setEstates(estates);
-		return userRepository.save(u);
+		userRepository.save(u);
+		return new EstateDTO(e);
 		
 		
 	}
@@ -72,6 +74,10 @@ public class UserService {
 	public List<EstateDTO> getEstatesForUser(Long id) {
 		User u = findById(id);
 		return u.getEstates().stream().map(e -> new EstateDTO(e)).collect(Collectors.toList());
+	}
+	
+	public List<EstateDTO> getAllEstates() {
+		return estateRepository.findAll().stream().map(e -> new EstateDTO(e)).toList();
 	}
 	
 
@@ -84,8 +90,10 @@ public class UserService {
 		return userRepository.findById(id).orElseGet(null);
 	}
 
-	public List<User> findAll(String search) throws AccessDeniedException {
-		return userRepository.search(search.trim().toLowerCase());
+	public List<UserDTO> findAll(String search) throws AccessDeniedException {
+		List<User> users = userRepository.search(search.trim().toLowerCase());
+		System.out.println(users.size() + " DASDAASD");
+		return users.stream().map(u -> new UserDTO(u)).toList();
 	}
 
 	public User save(UserRequest userRequest) {
@@ -141,7 +149,8 @@ public class UserService {
 		return "User with id: " + Id + " not found!";
 	}
 	
-	public String update(RoleUpdateInfo roleData) {
+	public UserDTO update(RoleUpdateInfo roleData) {
+		System.out.println("EVO MEEEEEE" + roleData.getId());
 		User u = findById(roleData.getId());
 		
 		if(u != null) {
@@ -151,12 +160,12 @@ public class UserService {
 			}
 			u.setRoles(oldRoles);
 			userRepository.save(u);
-			return "User with id: " + roleData.getId() + " succesfully updated!";
+			return new UserDTO(u);
 		}
-		return "User with id: " + roleData.getId() + " not found!";
+		throw new RuntimeException("User with id: " + roleData.getId() + " not found!");
 	}
 
-	public User activateUser(Long id) {
+	public UserDTO activateUser(Long id) {
 		User u = findById(id);
 
 		if(u == null){
@@ -165,6 +174,6 @@ public class UserService {
 
 		u.setEnabled(true);
 		userRepository.save(u);
-		return u;
+		return new UserDTO(u);
 	}
 }

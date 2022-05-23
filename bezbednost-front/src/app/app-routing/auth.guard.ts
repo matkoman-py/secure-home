@@ -12,9 +12,9 @@ export class AuthGuard implements CanActivate {
     // on the data property
     const expectedRole = route.data['expectedRoles'];
     // decode the token to get its payload
-    const tokenPayload = localStorage.getItem('role');
+    const tokenPayload = sessionStorage.getItem('role');
 
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
       this.router.navigate(['login']);
       return false;
     }
