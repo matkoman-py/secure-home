@@ -8,6 +8,7 @@ import { CsrComponent } from './csr/csr.component';
 import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { LogsComponent } from './logs/logs.component';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
 import { UserEstatesComponent } from './user-estates/user-estates.component';
 
@@ -23,6 +24,14 @@ const routes: Routes = [
   {
     path: 'certificates',
     component: CertificateComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRoles: ['ROLE_ADMIN'],
+    },
+  },
+  {
+    path: 'logs',
+    component: LogsComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRoles: ['ROLE_ADMIN'],

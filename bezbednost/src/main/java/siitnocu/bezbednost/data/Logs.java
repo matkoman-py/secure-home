@@ -17,7 +17,21 @@ public class Logs {
 	private Date date;
 	private String level;
 	private String message;
+	private String sourceApp;
+	private String sourceUser;
 	
+	public String getSourceApp() {
+		return sourceApp;
+	}
+	public void setSourceApp(String sourceApp) {
+		this.sourceApp = sourceApp;
+	}
+	public String getSourceUser() {
+		return sourceUser;
+	}
+	public void setSourceUser(String sourceUser) {
+		this.sourceUser = sourceUser;
+	}
 	public String getId() {
 		return id;
 	}
