@@ -17,15 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import siitnocu.bezbednost.data.NonValidToken;
 import siitnocu.bezbednost.data.UnsuccessfullLogin;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.JwtAuthenticationRequest;
-import siitnocu.bezbednost.dto.UserRequest;
 import siitnocu.bezbednost.dto.UserTokenState;
-import siitnocu.bezbednost.exception.ResourceConflictException;
 import siitnocu.bezbednost.repositories.NonValidTokenRepository;
 import siitnocu.bezbednost.repositories.UnsuccessfullLoginRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
@@ -76,16 +73,17 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenState> createAuthenticationToken(
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
-		 	logger.info(customLogger.info("--------------------------IDE GAS--------------------------"));
 		try {
 
 			Matcher matcher = usernamePattern.matcher(authenticationRequest.getUsername());
 			if (!matcher.matches()) {
+				logger.error(customLogger.error("Username pattern not valid"));
 				throw new RuntimeException("Usernames can only use letters, numbers, underscores, and periods.");
 			}
 
 			matcher = passwordPattern.matcher(authenticationRequest.getPassword());
 			if (!matcher.matches()) {
+				logger.error(customLogger.error("Username pattern not valid"));
 				throw new RuntimeException("Invalid character in password attempt!");
 			}
 			// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
@@ -113,10 +111,12 @@ public class AuthenticationController {
 			headers.add("Set-Cookie", cookie);
 
 			// Vrati token kao odgovor na uspesnu autentifikaciju
+			logger.info(customLogger.info("Succesfull login"));
 			return ResponseEntity.ok().headers(headers).body(new UserTokenState(jwt, expiresIn));
 		} catch (AuthenticationException exception) {
 			User user = userRepository.findByUsername(authenticationRequest.getUsername());
 			if (user == null) {
+				logger.error(customLogger.error("Bad credentials"));
 				return new ResponseEntity("Bad credentials!", HttpStatus.UNAUTHORIZED);
 			}
 
@@ -140,8 +140,10 @@ public class AuthenticationController {
 				System.out.println("LOCKED ACC");
 				user.setEnabled(false);
 				userRepository.save(user);
+				logger.error(customLogger.error("Account locked"));
 				return new ResponseEntity("Your account has been locked!", HttpStatus.UNAUTHORIZED);
 			}
+			logger.error(customLogger.error("Bad credentials"));
 			return new ResponseEntity("Bad credentials, warning: " + (3 - howMuchLast5Mins) + " more attempts!",
 					HttpStatus.UNAUTHORIZED);
 		}
