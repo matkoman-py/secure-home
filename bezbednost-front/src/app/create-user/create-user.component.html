@@ -104,6 +104,7 @@
         <th></th>
         <th></th>
         <th></th>
+        <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-user>
@@ -148,6 +149,16 @@
             label="Update"
             class="p-button-warning"
             (click)="showDialog(user.id)"
+          ></button>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Estates"
+            class="p-button-warning"
+            (click)="go(user.id)"
           ></button>
         </td>
       </tr>

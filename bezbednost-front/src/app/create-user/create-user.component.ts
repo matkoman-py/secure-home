@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { RoleOptions } from '../model/RoleOptions';
 import { RoleUpdateInfo } from '../model/RoleUpdateInfo';
@@ -38,7 +39,8 @@ export class CreateUserComponent implements OnInit {
   };
   constructor(
     private createUserService: CreateUserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -250,5 +252,9 @@ export class CreateUserComponent implements OnInit {
     //if (!this.userInfo.password.match(this.PASSWORD_PATTERN)) return false;
 
     return true;
+  }
+
+  go(id:number) {
+    this.router.navigateByUrl('/user-estates/'+id);
   }
 }

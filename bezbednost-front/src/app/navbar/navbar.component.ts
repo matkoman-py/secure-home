@@ -18,6 +18,11 @@ export class NavbarComponent implements OnInit {
       routerLink: '/certificates',
     },
     {
+      label: 'Logs',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/logs',
+    },
+    {
       label: 'CSR',
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/csr',
@@ -57,7 +62,7 @@ export class NavbarComponent implements OnInit {
   }
 
   setNavbarItems = () => {
-    this.role = localStorage.getItem('role');
+    this.role = sessionStorage.getItem('role');
 
     if (this.role === '') {
       this.items = [

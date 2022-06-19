@@ -27,6 +27,8 @@ import { PasswordModule } from 'primeng/password';
 import { LogoutComponent } from './logout/logout.component';
 import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { UserEstatesComponent } from './user-estates/user-estates.component';
+import { LogsComponent } from './logs/logs.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { CreateUserComponent } from './create-user/create-user.component';
     CreateUserComponent,
     LoginComponent,
     LogoutComponent,
+    UserEstatesComponent,
+    LogsComponent,
   ],
   imports: [
     BrowserAnimationsModule,

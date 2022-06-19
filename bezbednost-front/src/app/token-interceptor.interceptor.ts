@@ -18,7 +18,7 @@ export class TokenInterceptorInterceptor implements HttpInterceptor {
     const newRequest = request.clone({
       headers: request.headers.set(
         'Authorization',
-        'Bearer ' + localStorage.getItem('token')!
+        'Bearer ' + sessionStorage.getItem('token')!
       ),
     });
 

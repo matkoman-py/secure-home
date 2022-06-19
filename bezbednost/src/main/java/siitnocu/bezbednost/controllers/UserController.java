@@ -15,6 +15,7 @@ import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
+import siitnocu.bezbednost.dto.UserDTO;
 import siitnocu.bezbednost.dto.UserRequest;
 import siitnocu.bezbednost.exception.ResourceConflictException;
 import siitnocu.bezbednost.services.UserService;
@@ -38,18 +39,26 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/{userId}/{estateId}")
-	public User addEstateToUser(@PathVariable Long userId, @PathVariable Long estateId) {
+	@PreAuthorize("hasAuthority('ADD_ESTATE')")
+	public EstateDTO addEstateToUser(@PathVariable Long userId, @PathVariable Long estateId) {
 		return this.userService.addEstateToUser(userId, estateId);
 	}
 	
 	@GetMapping("/user/estates/{userId}")
+	@PreAuthorize("hasAuthority('READ_ESTATES_USER')")
 	public List<EstateDTO> getEstatesForUser(@PathVariable Long userId) {
 		return this.userService.getEstatesForUser(userId);
+	}
+	
+	@GetMapping("/user/estates")
+	@PreAuthorize("hasAuthority('READ_ESTATES')")
+	public List<EstateDTO> getEstates() {
+		return this.userService.getAllEstates();
 	}
 
 	@GetMapping("/all")
 	@PreAuthorize("hasAuthority('READ_USERS')")
-	public List<User> loadAll(@RequestParam(value = "search", defaultValue = "") String search) {
+	public List<UserDTO> loadAll(@RequestParam(value = "search", defaultValue = "") String search) {
 		return this.userService.findAll(search);
 	}
 
@@ -79,13 +88,13 @@ public class UserController {
 
 	@PutMapping("/activate/{Id}")
 	@PreAuthorize("hasAuthority('ACTIVATE_USER')")
-	public User activate(@PathVariable Long Id) {
+	public UserDTO activate(@PathVariable Long Id) {
 		return this.userService.activateUser(Id);
 	}
 
 	@PutMapping("/update")
 	@PreAuthorize("hasAuthority('UPDATE_USER')")
-	public User update(@RequestBody RoleUpdateInfo roleUpdateInfo) {
+	public UserDTO update(@RequestBody RoleUpdateInfo roleUpdateInfo) {
 		return this.userService.update(roleUpdateInfo);
 	}
 }
