@@ -2,7 +2,7 @@ package siitnocu.bezbednost.dto;
 
 import java.util.List;
 
-public class UserRequest {
+public class UserRequestDTO {
 
 	private Long id;
 

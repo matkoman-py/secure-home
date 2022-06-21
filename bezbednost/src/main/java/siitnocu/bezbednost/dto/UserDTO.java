@@ -26,7 +26,6 @@ public class UserDTO {
 
     private String username;
 
-
     private String password;
 
     private String firstName;
@@ -37,10 +36,8 @@ public class UserDTO {
 
     private boolean enabled;
 
-    
     private List<Role> roles;
 
-    
 	public UserDTO() {
 		super();
 	}

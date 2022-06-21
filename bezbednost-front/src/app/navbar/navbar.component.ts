@@ -1,7 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { LoginService } from '../login/services/login.service';
-import { LogoutService } from '../logout/services/logout.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  MenuItem
+} from 'primeng/api';
+import {
+  LoginService
+} from '../login/services/login.service';
+import {
+  LogoutService
+} from '../logout/services/logout.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,8 +20,7 @@ import { LogoutService } from '../logout/services/logout.service';
 export class NavbarComponent implements OnInit {
   role: string | null = '';
 
-  items: MenuItem[] = [
-    {
+  items: MenuItem[] = [{
       label: 'Certificates',
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/certificates',
@@ -65,16 +73,19 @@ export class NavbarComponent implements OnInit {
     this.role = sessionStorage.getItem('role');
 
     if (this.role === '') {
-      this.items = [
-        {
+      this.items = [{
           label: 'Login',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/login',
         },
+        {
+          label: 'Create User Request',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/create-user-request',
+        },
       ];
     } else {
-      this.items = [
-        {
+      this.items = [{
           label: 'Certificates',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/certificates',
@@ -109,17 +120,31 @@ export class NavbarComponent implements OnInit {
           routerLink: '/create-user',
           visible: this.role === 'ROLE_ADMIN',
         },
+        {
+          label: 'Logs',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/logs',
+        },
+        {
+          label: 'Approve User',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/approve-user-request',
+        },
       ];
     }
   };
 
   setLogoutItems = () => {
-    this.items = [
-      {
+    this.items = [{
         label: 'Login',
         icon: 'pi pi-fw pi-sign-in',
         routerLink: '/login',
       },
+      {
+        label: 'Create User Request',
+        icon: 'pi pi-fw pi-sign-in',
+        routerLink: '/create-user-request',
+      }
     ];
   };
 

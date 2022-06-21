@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './app-routing/auth.guard';
+import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
 import { CertificateComponent } from './certificate/certificate.component';
+import { CreateUserRequestComponent } from './create-user-request/create-user-request.component';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { CsrComponent } from './csr/csr.component';
 import { GenerateCsrComponent } from './generate-csr/generate-csr.component';
@@ -44,10 +46,18 @@ const routes: Routes = [
     data: {
       expectedRoles: ['ROLE_ADMIN', 'ROLE_USER'],
     },
-  },
+  },//ApproveUserRequestComponent
   {
     path: 'user-estates/:id',
     component: UserEstatesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRoles: ['ROLE_ADMIN'],
+    },
+  },
+    {
+    path: 'approve-user-request',
+    component: ApproveUserRequestComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRoles: ['ROLE_ADMIN'],
@@ -78,6 +88,7 @@ const routes: Routes = [
     },
   },
   { path: 'login', component: LoginComponent },
+  { path: 'create-user-request', component: CreateUserRequestComponent },
   {
     path: 'logout',
     component: LogoutComponent,
