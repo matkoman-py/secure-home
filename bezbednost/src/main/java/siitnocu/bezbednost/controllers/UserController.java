@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import siitnocu.bezbednost.data.Estate;
@@ -24,6 +25,7 @@ import siitnocu.bezbednost.services.UserService;
 @RestController
 @RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin
+@Transactional
 public class UserController {
 
 	@Autowired

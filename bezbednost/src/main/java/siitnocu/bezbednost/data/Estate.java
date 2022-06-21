@@ -1,18 +1,11 @@
 package siitnocu.bezbednost.data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -31,25 +24,27 @@ public class Estate {
 	@Column(name = "address")
     private String address;
 	
-	
-	
 	@Column(name = "description", nullable = true)
     private String desciption;
 	
 	@ManyToMany(mappedBy = "estates", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<User>();
 
+	@OneToMany(mappedBy = "estate", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Device> devices = new ArrayList<>();
+
 	public Estate() {
 		super();
 	}
 
-	public Estate(Long id, String address, String desciption, EstateType estateType, Set<User> users) {
+	public Estate(Long id, String address, String desciption, EstateType estateType, Set<User> users, List<Device> devices) {
 		super();
 		this.id = id;
 		this.address = address;
 		this.desciption = desciption;
 		this.estateType = estateType;
 		this.users = users;
+		this.devices = devices;
 	}
 	
 	
@@ -101,10 +96,12 @@ public class Estate {
 	public void setEstateType(EstateType estateType) {
 		this.estateType = estateType;
 	}
-	
-	
-	
-	
-	
 
+	public List<Device> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(List<Device> devices) {
+		this.devices = devices;
+	}
 }

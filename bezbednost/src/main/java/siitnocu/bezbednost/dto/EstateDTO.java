@@ -1,7 +1,11 @@
 package siitnocu.bezbednost.dto;
 
+import siitnocu.bezbednost.data.Device;
 import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.EstateType;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EstateDTO {
 
@@ -9,6 +13,7 @@ public class EstateDTO {
 	private String address;
 	private EstateType estateType;
 	private String description;
+	private List<String> devices;
 	public EstateDTO() {
 		super();
 	}
@@ -25,6 +30,7 @@ public class EstateDTO {
 		this.address = e.getAddress();
 		this.estateType = e.getEstateType();
 		this.description = e.getDesciption();
+		this.devices = e.getDevices().stream().map(Device::getPathToFile).collect(Collectors.toList());
 	}
 	public String getAddress() {
 		return address;
@@ -50,6 +56,12 @@ public class EstateDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
+
+	public List<String> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(List<String> devices) {
+		this.devices = devices;
+	}
 }

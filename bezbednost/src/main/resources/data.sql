@@ -4,15 +4,33 @@
 
 INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('user', '$2a$12$RXqktT4alBoBQT/9uVSfRet5tIpCO96GqUm6/eNY7ONIAtMA53Od6', 'Marko', 'Markovic', 'user@example.com', true, '2017-10-01');
 INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('admin', '$2a$12$VO3ygoEyGYDIDdVTumD99Oguaab9SVqIjqNv3uNDrXqGMkbXJL2A.', 'Nikola', 'Nikolic', 'admin@example.com', true, '2017-10-01');
+INSERT INTO USERS (username, password, first_name, last_name, email, enabled, last_password_reset_date) VALUES ('user1', '$2a$12$RXqktT4alBoBQT/9uVSfRet5tIpCO96GqUm6/eNY7ONIAtMA53Od6', 'Nikola', 'Nikolic', 'user1@example.com', true, '2017-10-01');
+
 INSERT INTO ESTATES (address, description, estate_type) VALUES ('VLADIKE CIRICA 5', 'OPIS', 'APARTMENT');
 INSERT INTO ESTATES (address, description, estate_type) VALUES ('Bulevar Evrope 5', 'OPIS', 'HOUSE');
 
+INSERT INTO DEVICE (device_type, ip_address, path, estate_id) VALUES
+    ('DOOR', '123.114.411.124', 'door1', 1),
+    ('DOOR', '123.114.411.125', 'door2', 1),
+    ('DOOR', '123.114.411.126', 'door3', 2),
+    ('REFRIGERATOR', '123.114.411.127', 'refrigerator1', 2),
+    ('AIR_CONDITIONER', '123.114.411.128', 'airconditioner1', 2),
+    ('DISHWASHER', '123.114.411.178', 'dishwasher1', 1),
+    ('LIGHT', '123.114.411.168', 'light1', 2),
+    ('DOORLOCK', '123.114.411.158', 'doorlock1', 1),
+    ('BLINDS', '123.114.411.148', 'blinds1', 1),
+    ('CEILING_FAN', '123.114.411.138', 'ceilingfan1', 2);
 
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
 INSERT INTO ROLE (name) VALUES ('ROLE_OWNER');
 INSERT INTO ROLE (name) VALUES ('ROLE_RESIDENT');
 
+INSERT INTO USER_ESTATE (user_id, estate_id) VALUES (1, 1); -- user-u dodeljujemo rolu USER
+INSERT INTO USER_ESTATE (user_id, estate_id) VALUES (1, 2); -- user-u dodeljujemo rolu ADMIN
+INSERT INTO USER_ESTATE (user_id, estate_id) VALUES (3, 2); -- user-u dodeljujemo rolu USER
+
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 2); -- user-u dodeljujemo rolu USER
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (3, 2); -- user-u dodeljujemo rolu USER
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 1); -- user-u dodeljujemo rolu ADMIN
 
 INSERT INTO PRIVILEGE (name) VALUES ('READ_USER');
