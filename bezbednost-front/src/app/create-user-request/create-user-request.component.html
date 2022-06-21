@@ -1,0 +1,57 @@
+<p-toast position="top-center" key="tc"></p-toast>
+<div class="p-formgroup-inline search">
+    <div class="p-field">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="userInfo.username"
+        placeholder="Username"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="userInfo.password"
+        placeholder="Password"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="userInfo.firstname"
+        placeholder="First Name"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="userInfo.lastname"
+        placeholder="Last Name"
+      />
+    </div>
+    <br />
+    <div class="p-field">
+      <input
+        type="text"
+        pInputText
+        [(ngModel)]="userInfo.email"
+        placeholder="Email"
+      />
+    </div>
+
+    <br />
+    <br />
+    <div class="p-field">
+      <p-button
+        label="Submit"
+        (onClick)="createUserRequest()"
+        [disabled]="!isInfoValid()"
+      ></p-button>
+    </div>
+  </div>

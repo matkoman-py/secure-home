@@ -29,6 +29,8 @@ import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { UserEstatesComponent } from './user-estates/user-estates.component';
 import { LogsComponent } from './logs/logs.component';
+import { CreateUserRequestComponent } from './create-user-request/create-user-request.component';
+import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { LogsComponent } from './logs/logs.component';
     LogoutComponent,
     UserEstatesComponent,
     LogsComponent,
+    CreateUserRequestComponent,
+    ApproveUserRequestComponent,
   ],
   imports: [
     BrowserAnimationsModule,

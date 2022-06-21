@@ -11,12 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
 import siitnocu.bezbednost.dto.UserDTO;
-import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.dto.UserRequestDTO;
 import siitnocu.bezbednost.exception.ResourceConflictException;
 import siitnocu.bezbednost.services.UserService;
 
@@ -70,7 +69,7 @@ public class UserController {
 	
 	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('SAVE_USER')")
-	public User save(@RequestBody UserRequest user) {
+	public User save(@RequestBody UserRequestDTO user) {
 		User existUser = this.userService.findByUsername(user.getUsername());
 
 		if (existUser != null) {
@@ -78,6 +77,12 @@ public class UserController {
 		}
 
 		return this.userService.save(user);
+	}
+
+	@PostMapping("/approve/{id}")
+	@PreAuthorize("hasAuthority('SAVE_USER')")
+	public User approve(@PathVariable Long id) {
+		return this.userService.approve(id);
 	}
 	
 	@DeleteMapping("/delete/{Id}")

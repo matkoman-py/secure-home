@@ -16,16 +16,21 @@ import org.springframework.stereotype.Service;
 import siitnocu.bezbednost.data.Estate;
 import siitnocu.bezbednost.data.Role;
 import siitnocu.bezbednost.data.User;
-import siitnocu.bezbednost.dto.UserRequest;
+import siitnocu.bezbednost.data.UserRequest;
+import siitnocu.bezbednost.dto.UserRequestDTO;
 import siitnocu.bezbednost.dto.EstateDTO;
 import siitnocu.bezbednost.dto.RoleUpdateInfo;
 import siitnocu.bezbednost.dto.UserDTO;
 import siitnocu.bezbednost.repositories.EstateRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
+import siitnocu.bezbednost.repositories.UserRequestRepository;
 
 @Service
 public class UserService {
 
+	@Autowired
+	private UserRequestRepository userRequestRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -67,8 +72,6 @@ public class UserService {
 		u.setEstates(estates);
 		userRepository.save(u);
 		return new EstateDTO(e);
-		
-		
 	}
 	
 	public List<EstateDTO> getEstatesForUser(Long id) {
@@ -96,7 +99,7 @@ public class UserService {
 		return users.stream().map(u -> new UserDTO(u)).toList();
 	}
 
-	public User save(UserRequest userRequest) {
+	public User save(UserRequestDTO userRequest) {
 		User u = new User();
 
 		Matcher matcher = usernamePattern.matcher(userRequest.getUsername());
@@ -175,5 +178,21 @@ public class UserService {
 		u.setEnabled(true);
 		userRepository.save(u);
 		return new UserDTO(u);
+	}
+
+	public User approve(Long id) {
+		UserRequest ur = userRequestRepository.findById(id).orElse(null);
+		if(ur != null) {
+			throw new RuntimeException("UserRequest with id: "+ id + "doesn't exist");
+		}
+		
+		User u = new User();
+		u.setUsername(ur.getUsername());
+		u.setEmail(ur.getEmail());
+		u.setFirstName(ur.getFirstname());
+		u.setLastName(ur.getLastname());
+		u.setPassword(passwordEncoder.encode(ur.getPassword()));
+		u.setRoles(new ArrayList<Role>());
+		return userRepository.save(u);
 	}
 }

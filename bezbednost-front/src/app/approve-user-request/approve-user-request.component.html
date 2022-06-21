@@ -1,0 +1,30 @@
+<p-table [value]="usersRequests">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-userRequest>
+      <tr>
+        <td>{{ userRequest.firstname }}</td>
+        <td>{{ userRequest.lastname }}</td>
+        <td>{{ userRequest.username }}</td>
+        <td>{{ userRequest.email }}</td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="Approve"
+            class="p-button-primary"
+            (click)="approve(userRequest.id)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  
