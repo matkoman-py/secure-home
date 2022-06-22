@@ -33,6 +33,12 @@ export class ApproveUserRequestComponent implements OnInit {
     });
   }
 
+  delete(id: number) {
+    this.approveUserRequestService.delete(id).subscribe(res => {
+      this.getAll();
+    })
+  }
+
   approve(id: number) {
     this.approveUserRequestService.approve(id).subscribe(
       (res) => {
@@ -40,9 +46,9 @@ export class ApproveUserRequestComponent implements OnInit {
           key: 'tc',
           severity: 'success',
           summary: 'Success',
-          detail: 'User Request succesfully updated',
+          detail: 'User Request succesfully approveed',
         });
-        this.getAll();
+        this.delete(id);
       },
       (err) => {
         this.messageService.add({

@@ -182,7 +182,7 @@ public class UserService {
 
 	public User approve(Long id) {
 		UserRequest ur = userRequestRepository.findById(id).orElse(null);
-		if(ur != null) {
+		if(ur == null) {
 			throw new RuntimeException("UserRequest with id: "+ id + "doesn't exist");
 		}
 		

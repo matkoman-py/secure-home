@@ -11,7 +11,11 @@ export class ApproveUserRequestService {
   constructor(private http: HttpClient) { }
 
   approve(id: number): Observable<Object> {
-    return this.http.post<Object>('/api/usersapprove/' + id, {});
+    return this.http.post<Object>('/api/users/approve/' + id, {});
+  }
+
+  delete(id: number): Observable<Object> {
+    return this.http.delete<Object>('/api/user-requests/delete/' + id, {});
   }
 
   getAll(): Observable<UserRequestDTO[]> {

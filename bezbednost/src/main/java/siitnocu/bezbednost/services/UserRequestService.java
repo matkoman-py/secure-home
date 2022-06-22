@@ -41,6 +41,15 @@ public class UserRequestService {
 		return userRequestRepository.findAll();
 	}
 	
+	public String delete(Long id) {
+		UserRequest ur = userRequestRepository.findById(id).orElse(null);
+		if(ur == null) {
+			throw new RuntimeException("UserRequest with id: "+ id.toString() + "doesn't exist");
+		}
+		userRequestRepository.delete(ur);
+		return "UserRequest with id: " + ur + " succesfully deleated";
+	}
+	
 	public UserRequest save(UserRequestDTO userRequestData) {
 		UserRequest u = new UserRequest();
 
