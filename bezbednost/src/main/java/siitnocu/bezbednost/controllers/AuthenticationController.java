@@ -83,7 +83,7 @@ public class AuthenticationController {
 
 			matcher = passwordPattern.matcher(authenticationRequest.getPassword());
 			if (!matcher.matches()) {
-				logger.error(customLogger.error("Username pattern not valid"));
+				logger.error(customLogger.error("Password pattern not valid"));
 				throw new RuntimeException("Invalid character in password attempt!");
 			}
 			// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
@@ -111,7 +111,7 @@ public class AuthenticationController {
 			headers.add("Set-Cookie", cookie);
 
 			// Vrati token kao odgovor na uspesnu autentifikaciju
-			logger.info(customLogger.info("Succesfull login"));
+			logger.info(customLogger.info("Successful login"));
 			return ResponseEntity.ok().headers(headers).body(new UserTokenState(jwt, expiresIn));
 		} catch (AuthenticationException exception) {
 			User user = userRepository.findByUsername(authenticationRequest.getUsername());
@@ -152,10 +152,12 @@ public class AuthenticationController {
 	@PutMapping("/logout")
 	@PreAuthorize("hasAuthority('LOGOUT')")
 	public ResponseEntity<String> logout(HttpServletRequest request) {
+		System.out.println("DSADASDAS");
 		String authToken = tokenUtils.getToken(request);
 		NonValidToken nonValidToken = new NonValidToken();
 		nonValidToken.setToken(authToken);
 		nonValidTokenRepository.save(nonValidToken);
-		return new ResponseEntity<>("Success!", HttpStatus.OK);
+		logger.info(customLogger.info("User logged out"));
+		return new ResponseEntity<String>("Success!", HttpStatus.OK);
 	}
 }

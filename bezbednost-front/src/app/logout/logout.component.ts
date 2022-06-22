@@ -11,11 +11,15 @@ export class LogoutComponent implements OnInit {
   constructor(private router: Router, private logoutService: LogoutService) {}
 
   ngOnInit(): void {
+    this.logoutService.userLogout().subscribe(res => {
+      console.log(res);
+    });
     sessionStorage.setItem('role', '');
     sessionStorage.setItem('token', '');
     sessionStorage.setItem('isLoggedIn', 'false');
     sessionStorage.setItem('username', '');
     this.router.navigate(['login']);
-    this.logoutService.logoutFunction();
+    this.logoutService.emitLogout();
+    
   }
 }

@@ -1,5 +1,6 @@
 package siitnocu.bezbednost.services;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +22,7 @@ public class CustomLogger {
 	    log.setSourceApp("ADMIN APP");
 	    log.setSourceUser(SecurityContextHolder.getContext().getAuthentication().getName());
 	    log.setMessage(message);
-	    log.setDate(new Date());
+	    log.setDate(LocalDateTime.now());
 	    mongoTemplate.insert(log, "Logs");
 	    return message;
 	}
@@ -32,7 +33,7 @@ public class CustomLogger {
 	    log.setSourceApp("ADMIN APP");
 	    log.setSourceUser(SecurityContextHolder.getContext().getAuthentication().getName());
 	    log.setMessage(message);
-	    log.setDate(new Date());
+	    log.setDate(LocalDateTime.now());
 	    mongoTemplate.insert(log, "Logs");
 	    return message;
 	}
@@ -43,7 +44,7 @@ public class CustomLogger {
 	    log.setSourceApp("ADMIN APP");
 	    log.setSourceUser(SecurityContextHolder.getContext().getAuthentication().getName());
 	    log.setMessage(message);
-	    log.setDate(new Date());
+	    log.setDate(LocalDateTime.now());
 	    mongoTemplate.insert(log, "Logs");
 	    return message;
 	}

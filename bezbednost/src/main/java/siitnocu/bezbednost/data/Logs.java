@@ -1,5 +1,6 @@
 package siitnocu.bezbednost.data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.GeneratedValue;
@@ -8,13 +9,13 @@ import javax.persistence.GenerationType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "Logs")
+@Document(collection = "Logs")
 public class Logs {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
-	private Date date;
+	private LocalDateTime date;
 	private String level;
 	private String message;
 	private String sourceApp;
@@ -38,10 +39,10 @@ public class Logs {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 	public String getLevel() {

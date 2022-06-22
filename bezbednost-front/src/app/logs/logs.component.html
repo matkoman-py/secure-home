@@ -1,1 +1,39 @@
 <p>logs works!</p>
+<p-table [value]="logs" sortMode="multiple" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="level">Level <p-sortIcon field="level"></p-sortIcon></th>
+            <th pSortableColumn="message">Message <p-sortIcon field="message"></p-sortIcon></th>
+            <th pSortableColumn="sourceApp">Source app <p-sortIcon field="sourceApp"></p-sortIcon></th>
+            <th pSortableColumn="sourceUser">Source user <p-sortIcon field="sourceUser"></p-sortIcon></th>
+            <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-log>
+        <tr *ngIf="log.level === 'ERROR'">
+            <td style="background-color: rgb(241, 148, 148);">{{log.id}}</td>
+            <td style="background-color: rgb(241, 148, 148);">{{log.level}}</td>
+            <td style="background-color: rgb(241, 148, 148);">{{log.message}}</td>
+            <td style="background-color: rgb(241, 148, 148);">{{log.sourceApp}}</td>
+            <td style="background-color: rgb(241, 148, 148);">{{log.sourceUser}}</td>
+            <td style="background-color: rgb(241, 148, 148);">{{convertDate(log.date)}}</td>
+        </tr>
+        <tr *ngIf="log.level === 'INFO'">
+            <td style="background-color: rgb(159, 241, 148);">{{log.id}}</td>
+            <td style="background-color: rgb(159, 241, 148);">{{log.level}}</td>
+            <td style="background-color: rgb(159, 241, 148);">{{log.message}}</td>
+            <td style="background-color: rgb(159, 241, 148);">{{log.sourceApp}}</td>
+            <td style="background-color: rgb(159, 241, 148);">{{log.sourceUser}}</td>
+            <td style="background-color: rgb(159, 241, 148);">{{convertDate(log.date)}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-table>

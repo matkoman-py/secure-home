@@ -7,6 +7,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 
 import org.bouncycastle.operator.OperatorCreationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import extensions.CertificateExtensions;
 import siitnocu.bezbednost.certificates.CSRExtensions;
 import siitnocu.bezbednost.data.SubjectData;
+import siitnocu.bezbednost.services.CustomLogger;
 import siitnocu.bezbednost.services.TestService;
 import siitnocu.bezbednost.utils.CertificateInfo;
 
@@ -35,6 +38,12 @@ import siitnocu.bezbednost.utils.CertificateInfo;
 public class TestController {
 	
 	private TestService testService;
+	
+	@Autowired
+	CustomLogger customLogger;
+	
+	Logger logger = LoggerFactory.getLogger(CustomLogger.class);
+	
 
 	@Autowired
 	public TestController(TestService testService) {
@@ -44,12 +53,15 @@ public class TestController {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('GENERATE_CSR')")
 	public ResponseEntity<String> getAll(@RequestBody CertificateInfo csrInfo) throws NoSuchAlgorithmException, OperatorCreationException, IOException, KeyStoreException, CertificateException, NoSuchProviderException {
-		return ResponseEntity.ok(testService.generateCSR(csrInfo));
+		String csr = testService.generateCSR(csrInfo);
+		logger.info(customLogger.info("CSR generated"));
+		return ResponseEntity.ok(csr);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/decode")
 	@PreAuthorize("hasAuthority('DECODE_CSR')")
 	public ResponseEntity<String> getThis(@RequestBody String csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		logger.info(customLogger.info("CSR decoded"));
 		return ResponseEntity.ok(testService.decodeCSR(csr).getSerialNumber());
 	}
 	
@@ -68,6 +80,7 @@ public class TestController {
 	public ResponseEntity<String> signCsr(@PathVariable("issuerAlias") String alias,
 										  @PathVariable("subjectDomainName") String subjectDomainName,
 										  @RequestBody CSRExtensions csr) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		logger.info(customLogger.info("Issuer with alias " + alias + " signed " + subjectDomainName));
 		return ResponseEntity.ok(testService.signCSR(csr, alias, subjectDomainName));
 	}
 
@@ -75,6 +88,7 @@ public class TestController {
 	@PreAuthorize("hasAuthority('REVOKE_CERTIFICATE')")
 	public ResponseEntity<String> revokeCertifikate(@PathVariable("alias") String alias,
 													@RequestBody String reason) throws NoSuchAlgorithmException, OperatorCreationException, IOException, ParseException, InvalidKeySpecException, InvalidKeyException, CertificateException, KeyStoreException, NoSuchProviderException {
+		logger.info(customLogger.info("CSR gwith alias " + alias + " revoked because: " + reason));
 		return ResponseEntity.ok(testService.revokeCertificate(alias, reason));
 	}
 }
