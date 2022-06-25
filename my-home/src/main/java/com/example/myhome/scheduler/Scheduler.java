@@ -21,6 +21,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Transactional
@@ -47,6 +49,7 @@ public class Scheduler {
 
         for (List<String> s:records) {
             System.out.println(s);
+
             Optional<Device> device = deviceRepository.findByPathToFile(s.get(0));
             Device dev = device.get();
             Integer period = Integer.parseInt(s.get(1));
@@ -54,7 +57,7 @@ public class Scheduler {
             //kreirati task za svaki
             Runnable task  = () -> {
                 try {
-                    readMessagesWriteToMongo(dev.getPathToFile(), dev);
+                    readMessagesWriteToMongo(dev.getPathToFile(), dev, s.get(2));
                 } catch (ParseException | IOException e) {
                     e.printStackTrace();
                 }
@@ -76,8 +79,7 @@ public class Scheduler {
         return values;
     }
 
-    private void readMessagesWriteToMongo(String path, Device dev) throws IOException, ParseException {
-//        System.out.println("USAO SAM U FUNK" + path);
+    private void readMessagesWriteToMongo(String path, Device dev, String regex) throws IOException, ParseException {
         List<List<String>> records = new ArrayList<>();
         try(BufferedReader scanner = new BufferedReader(new FileReader(new File(path+".csv")))){
             String line;
@@ -87,6 +89,12 @@ public class Scheduler {
         }
 
         for (List<String> s:records) {
+            Matcher matcher = Pattern.compile(regex).matcher(s.get(0));
+            if(!matcher.matches()){
+                System.out.println("USAO SAM OVDE NE PROLAZI");
+                continue;
+            }
+
             Message message = new Message();
             message.setMessage(s.get(0));
             message.setDevice(dev);

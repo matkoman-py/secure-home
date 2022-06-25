@@ -35,6 +35,8 @@ public class ScriptController {
         Thread.sleep(3000);
         dev.writeMessage("Door opened");
         dev.writeMessage("Door closed");
+        dev.writeMessage("smece***1");
+
         return "Success";
     }
 

@@ -34,6 +34,9 @@ public class Device {
     @JoinColumn(name = "estate_id", nullable = false)
     private Estate estate;
 
+    @OneToMany(mappedBy = "device", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DeviceAlarm> alarms = new ArrayList<>();
+
     public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate) {
         this.id = id;
         this.type = type;
@@ -112,5 +115,13 @@ public class Device {
             escapedData = "\"" + data + "\"";
         }
         return escapedData;
+    }
+
+    public List<DeviceAlarm> getAlarms() {
+        return alarms;
+    }
+
+    public void setAlarms(List<DeviceAlarm> alarms) {
+        this.alarms = alarms;
     }
 }
