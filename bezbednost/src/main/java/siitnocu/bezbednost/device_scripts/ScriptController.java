@@ -30,11 +30,7 @@ public class ScriptController {
     public String normalStateDoor(@PathVariable String pathToFile) throws InterruptedException {
         Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
         Device dev = device.get();
-        dev.writeMessage("Door opened");
-        dev.writeMessage("Door closed");
-        Thread.sleep(3000);
-        dev.writeMessage("Door opened");
-        dev.writeMessage("Door closed");
+        dev.writeMessage("Door opened for 3 seconds");
         dev.writeMessage("smece***1");
 
         return "Success";
@@ -44,14 +40,7 @@ public class ScriptController {
     public String attackStateDoor(@PathVariable String pathToFile) throws InterruptedException {
         Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
         Device dev = device.get();
-        dev.writeMessage("Door opened");
-        dev.writeMessage("Door closed");
-        Thread.sleep(500);
-        dev.writeMessage("Door opened");
-        dev.writeMessage("Door closed");
-        Thread.sleep(500);
-        dev.writeMessage("Door opened");
-        dev.writeMessage("Door closed");
+        dev.writeMessage("Door opened for 10 seconds");
         return "Success";
     }
 
@@ -76,9 +65,7 @@ public class ScriptController {
     public String attackStateDoorlock(@PathVariable String pathToFile) throws InterruptedException {
         Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
         Device dev = device.get();
-        dev.writeMessage("Failed to open doorlock");
-        dev.writeMessage("Failed to open doorlock");
-        dev.writeMessage("Failed to open doorlock");
+        dev.writeMessage("Failed to open doorlock 3 times");
         return "Success";
     }
 
@@ -87,10 +74,38 @@ public class ScriptController {
         Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
         Device dev = device.get();
         dev.writeMessage("Opened doorlock");
-        dev.writeMessage("Locked doorlock");
-        dev.writeMessage("Opened doorlock");
-        dev.writeMessage("Locked doorlock");
+        return "Success";
+    }
 
+    @PostMapping("/normalState/dishwasher/{pathToFile}")
+    public String normalStateDishwasher(@PathVariable String pathToFile) throws InterruptedException {
+        Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
+        Device dev = device.get();
+        dev.writeMessage("Dishwasher water level 30 cm");
+        return "Success";
+    }
+
+    @PostMapping("/attackState/dishwasher/{pathToFile}")
+    public String attackStateDishwasher(@PathVariable String pathToFile) throws InterruptedException {
+        Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
+        Device dev = device.get();
+        dev.writeMessage("Dishwasher water level 60 cm");
+        return "Success";
+    }
+
+    @PostMapping("/normalState/refrigerator/{pathToFile}")
+    public String normalStateRefrigerator(@PathVariable String pathToFile) throws InterruptedException {
+        Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
+        Device dev = device.get();
+        dev.writeMessage("Refrigerator temprature 5");
+        return "Success";
+    }
+
+    @PostMapping("/attackState/refrigerator/{pathToFile}")
+    public String attackStateRefrigerator(@PathVariable String pathToFile) throws InterruptedException {
+        Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
+        Device dev = device.get();
+        dev.writeMessage("Refrigerator temprature 15");
         return "Success";
     }
 }
