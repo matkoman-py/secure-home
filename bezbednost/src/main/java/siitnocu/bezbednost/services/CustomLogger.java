@@ -9,12 +9,17 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import siitnocu.bezbednost.data.Logs;
+import siitnocu.bezbednost.data.SystemAlarm;
+import siitnocu.bezbednost.repositories.SystemAlarmRepository;
 
 @Component
 public class CustomLogger {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+
+	@Autowired
+	private SystemAlarmRepository systemAlarmRepository;
 
 	public String info(String message) {
 	    Logs log = new Logs();
@@ -34,6 +39,12 @@ public class CustomLogger {
 	    log.setSourceUser(SecurityContextHolder.getContext().getAuthentication().getName());
 	    log.setMessage(message);
 	    log.setDate(LocalDateTime.now());
+
+		SystemAlarm alarm = new SystemAlarm();
+		alarm.setDate(new Date());
+		alarm.setMessage("Error log appeared with message: " + message);
+		systemAlarmRepository.save(alarm);
+
 	    mongoTemplate.insert(log, "Logs");
 	    return message;
 	}
