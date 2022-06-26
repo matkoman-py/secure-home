@@ -31,6 +31,9 @@ import { UserEstatesComponent } from './user-estates/user-estates.component';
 import { LogsComponent } from './logs/logs.component';
 import { CreateUserRequestComponent } from './create-user-request/create-user-request.component';
 import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
+import {CalendarModule} from 'primeng/calendar';
+
+
 
 @NgModule({
   declarations: [
@@ -68,6 +71,7 @@ import { ApproveUserRequestComponent } from './approve-user-request/approve-user
     InputTextareaModule,
     DropdownModule,
     PasswordModule,
+    CalendarModule
   ],
   providers: [
     {
