@@ -2,6 +2,7 @@ package com.example.myhome.controller;
 
 import com.example.myhome.domain.*;
 import com.example.myhome.repository.NonValidTokenRepository;
+import com.example.myhome.repository.SystemAlarmRepository;
 import com.example.myhome.repository.UnsuccessfullLoginRepository;
 import com.example.myhome.repository.UserRepository;
 import com.example.myhome.service.UserService;
@@ -50,6 +51,9 @@ public class AuthenticationController {
 
     @Autowired
     private UnsuccessfullLoginRepository unsuccessfullLoginRepository;
+
+    @Autowired
+    private SystemAlarmRepository systemAlarmRepository;
 
     private static final String USERNAME_PATTERN =
             "^[A-Za-z0-9_.]+$";
@@ -123,6 +127,12 @@ public class AuthenticationController {
 
             if(howMuchLast5Mins>=3){
                 System.out.println("LOCKED ACC");
+
+                SystemAlarm alarm = new SystemAlarm();
+                alarm.setDate(new Date());
+                alarm.setMessage("Too much login attempts made on username: " + authenticationRequest.getUsername());
+                systemAlarmRepository.save(alarm);
+
                 user.setEnabled(false);
                 userRepository.save(user);
                 return new ResponseEntity("Your account has been locked!", HttpStatus.UNAUTHORIZED);

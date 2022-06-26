@@ -19,11 +19,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import siitnocu.bezbednost.data.NonValidToken;
+import siitnocu.bezbednost.data.SystemAlarm;
 import siitnocu.bezbednost.data.UnsuccessfullLogin;
 import siitnocu.bezbednost.data.User;
 import siitnocu.bezbednost.dto.JwtAuthenticationRequest;
 import siitnocu.bezbednost.dto.UserTokenState;
 import siitnocu.bezbednost.repositories.NonValidTokenRepository;
+import siitnocu.bezbednost.repositories.SystemAlarmRepository;
 import siitnocu.bezbednost.repositories.UnsuccessfullLoginRepository;
 import siitnocu.bezbednost.repositories.UserRepository;
 import siitnocu.bezbednost.services.CustomLogger;
@@ -60,6 +62,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private UnsuccessfullLoginRepository unsuccessfullLoginRepository;
+
+	@Autowired
+	private SystemAlarmRepository systemAlarmRepository;
 
 	private static final String USERNAME_PATTERN = "^[A-Za-z0-9_.]+$";
 	private static final Pattern usernamePattern = Pattern.compile(USERNAME_PATTERN);
@@ -141,6 +146,12 @@ public class AuthenticationController {
 				user.setEnabled(false);
 				userRepository.save(user);
 				logger.error(customLogger.error("Account locked"));
+
+				SystemAlarm alarm = new SystemAlarm();
+				alarm.setDate(new Date());
+				alarm.setMessage("Too much login attempts made on username: " + authenticationRequest.getUsername());
+				systemAlarmRepository.save(alarm);
+
 				return new ResponseEntity("Your account has been locked!", HttpStatus.UNAUTHORIZED);
 			}
 			logger.error(customLogger.error("Bad credentials"));

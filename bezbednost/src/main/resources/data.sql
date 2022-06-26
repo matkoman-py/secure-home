@@ -16,10 +16,7 @@ INSERT INTO DEVICE (device_type, ip_address, path, estate_id) VALUES
     ('REFRIGERATOR', '123.114.411.127', 'refrigerator1', 2),
     ('AIR_CONDITIONER', '123.114.411.128', 'airconditioner1', 2),
     ('DISHWASHER', '123.114.411.178', 'dishwasher1', 1),
-    ('LIGHT', '123.114.411.168', 'light1', 2),
-    ('DOORLOCK', '123.114.411.158', 'doorlock1', 1),
-    ('BLINDS', '123.114.411.148', 'blinds1', 1),
-    ('CEILING_FAN', '123.114.411.138', 'ceilingfan1', 2);
+    ('DOORLOCK', '123.114.411.158', 'doorlock1', 1);
 
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
 INSERT INTO ROLE (name) VALUES ('ROLE_OWNER');
@@ -59,6 +56,9 @@ INSERT INTO PRIVILEGE (name) VALUES ('READ_ESTATES_USER');
 INSERT INTO PRIVILEGE (name) VALUES ('ADD_ESTATE');
 INSERT INTO PRIVILEGE (name) VALUES ('READ_LOGS');
 INSERT INTO PRIVILEGE (name) VALUES ('TEST_DROOLS');
+INSERT INTO PRIVILEGE (name) VALUES ('READ_DEVICE_ALARMS');
+INSERT INTO PRIVILEGE (name) VALUES ('READ_SYSTEM_ALARMS');
+
 
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 1);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 2);
@@ -88,3 +88,6 @@ INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 23);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 24);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 25);
 INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (2, 26);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 27);
+INSERT INTO ROLE_PRIVILEGE (role_id, privilege_id) VALUES (1, 28);
+

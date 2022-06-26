@@ -88,6 +88,7 @@ public class Scheduler {
             }
         }
 
+
         for (List<String> s:records) {
             Matcher matcher = Pattern.compile(regex).matcher(s.get(0));
             if(!matcher.matches()){
