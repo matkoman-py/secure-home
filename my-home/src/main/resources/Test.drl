@@ -1,22 +1,36 @@
-import  com.example.myhome.domain.TestDrools;
+import  com.example.myhome.domain.DroolsDTO;
 
-rule "FD Interest Rate for Citi Bank duration more than 1 year and below 2 years"
+rule "Rule for door"
     when
-        fdObject : TestDrools( bankName=="Citi" && durationInYear >= 1 && durationInYear < 2);
+        dto : DroolsDTO( deviceType=="DOOR" && value >= 10 );
     then
-        fdObject.setFdInterestRate("3%");
+        dto.setAlarm(true);
 end;
 
-rule "FD Interest Rate for Citi Bank for duration more than or equal to 2 years"
+rule "Rule for refrigerator"
     when
-        fdObject : TestDrools( bankName=="Citi" && durationInYear >= 2);
+        dto : DroolsDTO( deviceType=="REFRIGERATOR" && value >= 10 );
     then
-        fdObject.setFdInterestRate("6%");
+        dto.setAlarm(true);
 end;
 
-rule "FD Interest Rate for JP Bank for duration more than or equal to 1 year"
+rule "Rule for doorlock"
     when
-        fdObject : TestDrools( bankName=="JP" && durationInYear >= 1);
+        dto : DroolsDTO( deviceType=="DOORLOCK" && value >= 3 );
     then
-        fdObject.setFdInterestRate("3%");
+        dto.setAlarm(true);
+end;
+
+rule "Rule for air conditioner"
+    when
+        dto : DroolsDTO( deviceType=="AIR_CONDITIONER" && value <= 10 );
+    then
+        dto.setAlarm(true);
+end;
+
+rule "Rule for dishwasher"
+    when
+        dto : DroolsDTO( deviceType=="DISHWASHER" && value >= 50 );
+    then
+        dto.setAlarm(true);
 end;
