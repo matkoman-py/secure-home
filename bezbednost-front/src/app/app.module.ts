@@ -33,6 +33,7 @@ import { CreateUserRequestComponent } from './create-user-request/create-user-re
 import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
 import { AlarmsSystemComponent } from './alarms-system/alarms-system.component';
 import { AlarmsDeviceComponent } from './alarms-device/alarms-device.component';
+import {CalendarModule} from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { AlarmsDeviceComponent } from './alarms-device/alarms-device.component';
     InputTextareaModule,
     DropdownModule,
     PasswordModule,
+    CalendarModule
   ],
   providers: [
     {

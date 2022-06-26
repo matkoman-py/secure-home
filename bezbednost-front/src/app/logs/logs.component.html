@@ -1,4 +1,26 @@
-<p>logs works!</p>
+<div class="grid p-fluid">
+    <div class="field col-12 md:col-2">
+        <p-calendar [(ngModel)]="after" [showTime]="true" [showSeconds]="true" inputId="time" placeholder="Date from"></p-calendar>
+    </div>
+    <div class="field col-12 md:col-2">
+        <p-calendar [(ngModel)]="before" [showTime]="true" [showSeconds]="true" inputId="time" placeholder="Date to"></p-calendar>
+    </div>
+    <div class="field col-12 md:col-2">
+        <input [(ngModel)]="level" type="text" pInputText placeholder="Level"/>
+    </div>
+    <div class="field col-12 md:col-2">
+        <input [(ngModel)]="message" type="text" pInputText placeholder="Message"/>
+    </div>
+    <div class="field col-12 md:col-2">
+        <input type="text" [(ngModel)]="app" pInputText placeholder="App"/>
+    </div>
+    <div class="field col-12 md:col-2">
+        <input type="text" [(ngModel)]="user" pInputText placeholder="User"/>
+    </div>
+    <div class="field col-12 md:col-12">
+        <p-button label="Filter" (onClick)="filter()"></p-button>
+    </div>
+</div>
 <p-table [value]="logs" sortMode="multiple" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
     <ng-template pTemplate="header">

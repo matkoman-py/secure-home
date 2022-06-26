@@ -1,3 +1,7 @@
 door1,100,^[A-Za-z0-9 .]+$
 door2,3,^[A-Za-z0-9 .]+$
 door3,30,^[A-Za-z0-9 .]+$
+refrigerator1,30,^[A-Za-z0-9 .]+$
+airconditioner1,30,^[A-Za-z0-9 .]+$
+dishwasher1,30,^[A-Za-z0-9 .]+$
+doorlock1,30,^[A-Za-z0-9 .]+$

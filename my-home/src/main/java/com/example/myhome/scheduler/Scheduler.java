@@ -1,9 +1,13 @@
 package com.example.myhome.scheduler;
 
 import com.example.myhome.domain.Device;
+import com.example.myhome.domain.DroolsDTO;
 import com.example.myhome.domain.Message;
+import com.example.myhome.domain.TestDrools;
 import com.example.myhome.repository.DeviceRepository;
 import com.example.myhome.repository.MessageRepository;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -36,6 +40,10 @@ public class Scheduler {
 
     @Autowired
     private TaskScheduler executor;
+
+    @Autowired
+    private KieContainer kieContainer;
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void setUpTasks() throws IOException {
@@ -89,11 +97,80 @@ public class Scheduler {
         }
 
 
+
         for (List<String> s:records) {
             Matcher matcher = Pattern.compile(regex).matcher(s.get(0));
             if(!matcher.matches()){
                 System.out.println("USAO SAM OVDE NE PROLAZI");
                 continue;
+            }
+
+            if(path.startsWith("doorlock")){
+                String[] split = s.get(0).split(" ");
+                Integer seconds = Integer.parseInt(split[4]);
+
+                KieSession kieSession = kieContainer.newKieSession();
+                DroolsDTO fdRequest = new DroolsDTO();
+                fdRequest.setDeviceType("DOORLOCK");
+                fdRequest.setValue(seconds);
+                kieSession.insert(fdRequest);
+                kieSession.fireAllRules();
+                kieSession.dispose();
+                System.out.println("USAO SAM OVDE NE doorlock dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+            }
+            else if(path.startsWith("refrigerator")){
+                String[] split = s.get(0).split(" ");
+                Integer seconds = Integer.parseInt(split[2]);
+
+                KieSession kieSession = kieContainer.newKieSession();
+                DroolsDTO fdRequest = new DroolsDTO();
+                fdRequest.setDeviceType("REFRIGERATOR");
+                fdRequest.setValue(seconds);
+                kieSession.insert(fdRequest);
+                kieSession.fireAllRules();
+                kieSession.dispose();
+                System.out.println("USAO SAM OVDE NE refrigerator dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+            }
+            else if(path.startsWith("airconditioner")){
+                String[] split = s.get(0).split(" ");
+                Integer seconds = Integer.parseInt(split[3]);
+
+                KieSession kieSession = kieContainer.newKieSession();
+                DroolsDTO fdRequest = new DroolsDTO();
+                fdRequest.setDeviceType("AIR_CONDITIONER");
+                fdRequest.setValue(seconds);
+                kieSession.insert(fdRequest);
+                kieSession.fireAllRules();
+                kieSession.dispose();
+                System.out.println("USAO SAM OVDE NE airconditioner dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+            }
+            else if(path.startsWith("dishwasher")){
+                String[] split = s.get(0).split(" ");
+                Integer seconds = Integer.parseInt(split[3]);
+
+                KieSession kieSession = kieContainer.newKieSession();
+                DroolsDTO fdRequest = new DroolsDTO();
+                fdRequest.setDeviceType("DISHWASHER");
+                fdRequest.setValue(seconds);
+                kieSession.insert(fdRequest);
+                kieSession.fireAllRules();
+                kieSession.dispose();
+                System.out.println("USAO SAM OVDE NE dishwasher dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+
+            }
+            else if(path.startsWith("door")){
+                String[] split = s.get(0).split(" ");
+                Integer seconds = Integer.parseInt(split[3]);
+
+                KieSession kieSession = kieContainer.newKieSession();
+                DroolsDTO fdRequest = new DroolsDTO();
+                fdRequest.setDeviceType("DOOR");
+                fdRequest.setValue(seconds);
+                kieSession.insert(fdRequest);
+                kieSession.fireAllRules();
+                kieSession.dispose();
+                System.out.println("USAO SAM OVDE NE door dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+
             }
 
             Message message = new Message();
