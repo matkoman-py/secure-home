@@ -55,6 +55,16 @@ export class NavbarComponent implements OnInit {
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/login',
     },
+    {
+      label: 'Device Alarms',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/alarms-device',
+    },
+    {
+      label: 'System Alarms',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/alarms-system',
+    },
   ];
 
   constructor(
@@ -129,6 +139,16 @@ export class NavbarComponent implements OnInit {
           label: 'Approve User',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/approve-user-request',
+        },
+        {
+          label: 'Device Alarms',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/alarms-device',
+        },
+        {
+          label: 'System Alarms',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/alarms-system',
         },
       ];
     }

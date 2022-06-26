@@ -31,6 +31,8 @@ import { UserEstatesComponent } from './user-estates/user-estates.component';
 import { LogsComponent } from './logs/logs.component';
 import { CreateUserRequestComponent } from './create-user-request/create-user-request.component';
 import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
+import { AlarmsSystemComponent } from './alarms-system/alarms-system.component';
+import { AlarmsDeviceComponent } from './alarms-device/alarms-device.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { ApproveUserRequestComponent } from './approve-user-request/approve-user
     LogsComponent,
     CreateUserRequestComponent,
     ApproveUserRequestComponent,
+    AlarmsSystemComponent,
+    AlarmsDeviceComponent,
   ],
   imports: [
     BrowserAnimationsModule,

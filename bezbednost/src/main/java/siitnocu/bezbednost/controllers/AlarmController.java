@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import siitnocu.bezbednost.data.DeviceAlarm;
 import siitnocu.bezbednost.data.SystemAlarm;
 import siitnocu.bezbednost.data.User;
+import siitnocu.bezbednost.dto.DeviceAlarmDTO;
 import siitnocu.bezbednost.services.AlarmService;
 import siitnocu.bezbednost.services.CustomLogger;
 
@@ -38,7 +39,7 @@ public class AlarmController {
 
     @GetMapping("/devices")
     @PreAuthorize("hasAuthority('READ_DEVICE_ALARMS')")
-    public List<DeviceAlarm> getAllDevicesAlarmsAlarms() {
+    public List<DeviceAlarmDTO> getAllDevicesAlarmsAlarms() {
         logger.info(customLogger.info("Requesting devices alarms"));
         return this.alarmService.getAllDevicesAlarms();
     }

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SystemAlarm } from '../model/SystemAlarm';
+import { AlarmsSystemService } from './services/alarms-system.service';
 
 @Component({
   selector: 'app-alarms-system',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AlarmsSystemComponent implements OnInit {
 
-  constructor() { }
+  alarms: SystemAlarm[] = [];
+  constructor(private alarmsSystemService: AlarmsSystemService) { }
 
   ngOnInit(): void {
+    this.getAll();
   }
 
+  getAll() {
+    this.alarmsSystemService.getAll().subscribe(res => {
+      this.alarms = res;
+      console.log(res);
+    })
+  }
 }
