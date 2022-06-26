@@ -73,7 +73,7 @@ public class ScriptController {
     public String normalStateDoorlock(@PathVariable String pathToFile) throws InterruptedException {
         Optional<Device> device = deviceRepository.findByPathToFile(pathToFile);
         Device dev = device.get();
-        dev.writeMessage("Opened doorlock");
+        dev.writeMessage("Failed to open doorlock 1 times");
         return "Success";
     }
 

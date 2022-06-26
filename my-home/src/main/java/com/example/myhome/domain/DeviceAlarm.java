@@ -15,7 +15,7 @@ public class DeviceAlarm {
     private String message;
     @Column(name = "date")
     private Date date;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "device_id", nullable = false)
     private Device device;
 

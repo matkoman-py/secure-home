@@ -34,7 +34,7 @@ public class Device {
     @JoinColumn(name = "estate_id", nullable = false)
     private Estate estate;
 
-    @OneToMany(mappedBy = "device", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "device", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<DeviceAlarm> alarms = new ArrayList<>();
 
     public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate) {
