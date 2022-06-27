@@ -1,8 +1,6 @@
 package com.example.myhome.controller;
 
-import com.example.myhome.domain.Device;
-import com.example.myhome.domain.DeviceDTO;
-import com.example.myhome.domain.Message;
+import com.example.myhome.domain.*;
 import com.example.myhome.service.DeviceService;
 import com.example.myhome.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +35,18 @@ public class DeviceController {
 
     ) throws ParseException {
         return deviceService.getMessagesFromUserDevices(message, dateAfter, dateBefore, pathToFile);
+    }
+
+    @GetMapping("/alarms")
+    public List<DeviceAlarmDTO> getAllAlarmsForUser() throws ParseException {
+        return deviceService.getAllAlarmsForUser();
+    }
+
+    @GetMapping("/report")
+    public ReportDTO getReport(
+            @RequestParam(value = "dateAfter", defaultValue = "") String dateAfter,
+            @RequestParam(value = "dateBefore", defaultValue = "") String dateBefore
+    ) throws ParseException {
+        return deviceService.getReport(dateAfter, dateBefore);
     }
 }
