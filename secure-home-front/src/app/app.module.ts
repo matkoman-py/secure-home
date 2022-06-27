@@ -28,6 +28,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AllMessagesComponent } from './all-messages/all-messages.component';
 import { ReportComponent } from './report/report.component';
+import { UserMessagesComponent } from './user-messages/user-messages.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ReportComponent } from './report/report.component';
     NavbarComponent,
     AllMessagesComponent,
     ReportComponent,
+    UserMessagesComponent,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -27,7 +27,7 @@ public class DeviceController {
     }
 
     @GetMapping("/messages")
-    public List<Message> getAllMessagesForUser(
+    public List<MessageDTO> getAllMessagesForUser(
             @RequestParam(value = "message", defaultValue = "") String message,
             @RequestParam(value = "dateAfter", defaultValue = "") String dateAfter,
             @RequestParam(value = "dateBefore", defaultValue = "") String dateBefore,
