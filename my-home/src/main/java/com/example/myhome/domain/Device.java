@@ -36,6 +36,9 @@ public class Device {
 
     @OneToMany(mappedBy = "device", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<DeviceAlarm> alarms = new ArrayList<>();
+    
+    @OneToOne(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Rule rule;
 
     public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate) {
         this.id = id;
@@ -45,7 +48,37 @@ public class Device {
         this.estate = estate;
     }
 
-    public Device() {
+    
+    
+    public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate,
+			List<DeviceAlarm> alarms, Rule rule) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.ipAddress = ipAddress;
+		this.pathToFile = pathToFile;
+		this.estate = estate;
+		this.alarms = alarms;
+		this.rule = rule;
+	}
+
+
+    
+    
+
+	public Rule getRule() {
+		return rule;
+	}
+
+
+
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+
+
+
+	public Device() {
     }
 
     public Long getId() {

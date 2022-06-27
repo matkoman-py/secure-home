@@ -4,6 +4,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.*;
+
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +40,9 @@ public class Device {
 
     @OneToMany(mappedBy = "device", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private List<DeviceAlarm> alarms = new ArrayList<>();
+    
+    @OneToOne(mappedBy = "device", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Rule rule;
 
     public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate) {
         this.id = id;
@@ -47,7 +52,21 @@ public class Device {
         this.estate = estate;
     }
 
-    public Device() {
+    
+    public Device(Long id, DeviceType type, String ipAddress, String pathToFile, Estate estate,
+			List<DeviceAlarm> alarms, Rule rule) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.ipAddress = ipAddress;
+		this.pathToFile = pathToFile;
+		this.estate = estate;
+		this.alarms = alarms;
+		this.rule = rule;
+	}
+
+
+	public Device() {
     }
 
     public Long getId() {
@@ -161,4 +180,16 @@ public class Device {
     public void setAlarms(List<DeviceAlarm> alarms) {
         this.alarms = alarms;
     }
+
+
+	public Rule getRule() {
+		return rule;
+	}
+
+
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+    
+    
 }
