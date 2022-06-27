@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -83,7 +84,7 @@ public class Scheduler {
 
     private List<String> getRecordFromLine(String line) throws IOException {
         String[] split = line.split(",");
-        List<String> values = new ArrayList<String>(Arrays.stream(split).toList());
+        List<String> values = new ArrayList<String>(Arrays.stream(split).collect(Collectors.toList()));
         return values;
     }
 

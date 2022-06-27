@@ -17,6 +17,9 @@ INSERT INTO DEVICE (device_type, ip_address, path, estate_id) VALUES
     ('AIR_CONDITIONER', '123.114.411.128', 'airconditioner1', 2),
     ('DISHWASHER', '123.114.411.178', 'dishwasher1', 1),
     ('DOORLOCK', '123.114.411.158', 'doorlock1', 1);
+    
+INSERT INTO RULES (device_id, lower_value, upper_value) VALUES
+    (1,15.0,30.1);
 
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
 INSERT INTO ROLE (name) VALUES ('ROLE_OWNER');

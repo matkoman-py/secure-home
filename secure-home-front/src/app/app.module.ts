@@ -30,6 +30,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { AllMessagesComponent } from './all-messages/all-messages.component';
 import { ReportComponent } from './report/report.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { UserMessagesComponent } from './user-messages/user-messages.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
     AllMessagesComponent,
     ReportComponent,
     NotificationsComponent,
+    UserMessagesComponent,
   ],
   imports: [
     BrowserAnimationsModule,

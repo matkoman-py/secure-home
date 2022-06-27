@@ -55,7 +55,7 @@ public class DeviceService {
                 .collect(Collectors.toList());
     }
 
-    public List<Message> getMessagesFromUserDevices(String message, String dateAfterString, String dateBeforeString, String pathToFile) throws ParseException {
+    public List<MessageDTO> getMessagesFromUserDevices(String message, String dateAfterString, String dateBeforeString, String pathToFile) throws ParseException {
         Date dateAfter, dateBefore;
         if(dateAfterString.equals("")){
             dateAfter = new Date(Long.MIN_VALUE);
@@ -78,7 +78,8 @@ public class DeviceService {
         for(Device d : devices){
             messagesFromDevices.addAll(messageRepository.search(dateAfter, dateBefore, message, d.getId(), pathToFile));
         }
-        return messagesFromDevices;
+        return messagesFromDevices.stream().map(m -> new MessageDTO(m.getId(), m.getDate(),
+				m.getMessage(), m.getDevice().getType(), m.getDevice().getEstate().getAddress())).collect(Collectors.toList());
     }
 
     public List<DeviceAlarmDTO> getAllAlarmsForUser() {
