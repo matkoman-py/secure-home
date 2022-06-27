@@ -1,9 +1,7 @@
 package com.example.myhome.scheduler;
 
-import com.example.myhome.domain.Device;
-import com.example.myhome.domain.DroolsDTO;
-import com.example.myhome.domain.Message;
-import com.example.myhome.domain.TestDrools;
+import com.example.myhome.domain.*;
+import com.example.myhome.repository.DeviceAlarmRepository;
 import com.example.myhome.repository.DeviceRepository;
 import com.example.myhome.repository.MessageRepository;
 import org.kie.api.runtime.KieContainer;
@@ -34,6 +32,9 @@ public class Scheduler {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private DeviceAlarmRepository deviceAlarmRepository;
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -76,18 +77,15 @@ public class Scheduler {
         }
     }
 
-    private List<String> getRecordFromLine(String line) {
-        List<String> values = new ArrayList<String>();
-        try (Scanner rowScanner = new Scanner(line)) {
-            rowScanner.useDelimiter(",");
-            while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
-            }
-        }
+    private List<String> getRecordFromLine(String line) throws IOException {
+        String[] split = line.split(",");
+        List<String> values = new ArrayList<String>(Arrays.stream(split).toList());
         return values;
     }
 
     private void readMessagesWriteToMongo(String path, Device dev, String regex) throws IOException, ParseException {
+
+        System.out.println("USAO SAM U TASK: "+ path);
         List<List<String>> records = new ArrayList<>();
         try(BufferedReader scanner = new BufferedReader(new FileReader(new File(path+".csv")))){
             String line;
@@ -117,6 +115,16 @@ public class Scheduler {
                 kieSession.fireAllRules();
                 kieSession.dispose();
                 System.out.println("USAO SAM OVDE NE doorlock dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+
+                if(fdRequest.isAlarm()){
+                    DeviceAlarm alarm = new DeviceAlarm();
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date=dateFormat.parse(s.get(1));
+                    alarm.setDate(date);
+                    alarm.setMessage(s.get(0));
+                    alarm.setDevice(dev);
+                    deviceAlarmRepository.save(alarm);
+                }
             }
             else if(path.startsWith("refrigerator")){
                 String[] split = s.get(0).split(" ");
@@ -130,6 +138,18 @@ public class Scheduler {
                 kieSession.fireAllRules();
                 kieSession.dispose();
                 System.out.println("USAO SAM OVDE NE refrigerator dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+
+                if(fdRequest.isAlarm()){
+                    DeviceAlarm alarm = new DeviceAlarm();
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date=dateFormat.parse(s.get(1));
+                    alarm.setDate(date);
+                    alarm.setMessage(s.get(0));
+                    alarm.setDevice(dev);
+                    deviceAlarmRepository.save(alarm);
+
+                    //soket
+                }
             }
             else if(path.startsWith("airconditioner")){
                 String[] split = s.get(0).split(" ");
@@ -143,6 +163,16 @@ public class Scheduler {
                 kieSession.fireAllRules();
                 kieSession.dispose();
                 System.out.println("USAO SAM OVDE NE airconditioner dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+
+                if(fdRequest.isAlarm()){
+                    DeviceAlarm alarm = new DeviceAlarm();
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date=dateFormat.parse(s.get(1));
+                    alarm.setDate(date);
+                    alarm.setMessage(s.get(0));
+                    alarm.setDevice(dev);
+                    deviceAlarmRepository.save(alarm);
+                }
             }
             else if(path.startsWith("dishwasher")){
                 String[] split = s.get(0).split(" ");
@@ -157,6 +187,15 @@ public class Scheduler {
                 kieSession.dispose();
                 System.out.println("USAO SAM OVDE NE dishwasher dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
+                if(fdRequest.isAlarm()){
+                    DeviceAlarm alarm = new DeviceAlarm();
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date=dateFormat.parse(s.get(1));
+                    alarm.setDate(date);
+                    alarm.setMessage(s.get(0));
+                    alarm.setDevice(dev);
+                    deviceAlarmRepository.save(alarm);
+                }
             }
             else if(path.startsWith("door")){
                 String[] split = s.get(0).split(" ");
@@ -171,6 +210,15 @@ public class Scheduler {
                 kieSession.dispose();
                 System.out.println("USAO SAM OVDE NE door dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
+                if(fdRequest.isAlarm()){
+                    DeviceAlarm alarm = new DeviceAlarm();
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date=dateFormat.parse(s.get(1));
+                    alarm.setDate(date);
+                    alarm.setMessage(s.get(0));
+                    alarm.setDevice(dev);
+                    deviceAlarmRepository.save(alarm);
+                }
             }
 
             Message message = new Message();
