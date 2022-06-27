@@ -4,6 +4,7 @@ import com.example.myhome.domain.*;
 import com.example.myhome.repository.DeviceAlarmRepository;
 import com.example.myhome.repository.DeviceRepository;
 import com.example.myhome.repository.MessageRepository;
+import com.example.myhome.service.WebSocketService;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class Scheduler {
 
     @Autowired
     private KieContainer kieContainer;
+
+    @Autowired
+    private WebSocketService webSocketService;
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -124,6 +128,9 @@ public class Scheduler {
                     alarm.setMessage(s.get(0));
                     alarm.setDevice(dev);
                     deviceAlarmRepository.save(alarm);
+
+                    webSocketService.sendMessage("alarm", "Alarm happened on: " + dev.getPathToFile());
+
                 }
             }
             else if(path.startsWith("refrigerator")){
@@ -148,7 +155,8 @@ public class Scheduler {
                     alarm.setDevice(dev);
                     deviceAlarmRepository.save(alarm);
 
-                    //soket
+                    webSocketService.sendMessage("alarm", "Alarm happened on: " + dev.getPathToFile());
+
                 }
             }
             else if(path.startsWith("airconditioner")){
@@ -172,6 +180,10 @@ public class Scheduler {
                     alarm.setMessage(s.get(0));
                     alarm.setDevice(dev);
                     deviceAlarmRepository.save(alarm);
+
+                    webSocketService.sendMessage("alarm", "Alarm happened on: " + dev.getPathToFile());
+
+
                 }
             }
             else if(path.startsWith("dishwasher")){
@@ -195,6 +207,9 @@ public class Scheduler {
                     alarm.setMessage(s.get(0));
                     alarm.setDevice(dev);
                     deviceAlarmRepository.save(alarm);
+
+                    webSocketService.sendMessage("alarm", "Alarm happened on: " + dev.getPathToFile());
+
                 }
             }
             else if(path.startsWith("door")){
@@ -218,6 +233,10 @@ public class Scheduler {
                     alarm.setMessage(s.get(0));
                     alarm.setDevice(dev);
                     deviceAlarmRepository.save(alarm);
+
+                    webSocketService.sendMessage("alarm", "Alarm happened on: " + dev.getPathToFile());
+
+
                 }
             }
 
