@@ -1,0 +1,13 @@
+import  com.example.myhome.domain.*;
+rule "1"
+    when
+        dto : DroolsDTO( deviceType=="DOOR" && (value >= 30.1  || value <=15.0);
+    then
+        dto.setAlarm(true);
+end;
+rule "3"
+    when
+        dto : DroolsDTO( deviceType=="DOOR" && (value >= 69.0  || value <=3.0);
+    then
+        dto.setAlarm(true);
+end;
