@@ -1,0 +1,34 @@
+<div class="grid p-fluid">
+  <div class="field col-12 md:col-2">
+    <p-calendar
+      [(ngModel)]="after"
+      [showTime]="true"
+      [showSeconds]="true"
+      inputId="time"
+      placeholder="Date from"
+    ></p-calendar>
+  </div>
+  <div class="field col-12 md:col-2">
+    <p-calendar
+      [(ngModel)]="before"
+      [showTime]="true"
+      [showSeconds]="true"
+      inputId="time"
+      placeholder="Date to"
+    ></p-calendar>
+  </div>
+  <div class="field col-12 md:col-12">
+    <p-button label="Get report" (onClick)="getReport()"></p-button>
+  </div>
+</div>
+
+<ul>
+  <li *ngFor="let estate of devices.deviceAlarms | keyvalue">
+    {{ estate.key }}
+    <ul>
+      <li *ngFor="let device of estate.value | keyvalue">
+        {{ device.key }} : {{ device.value }}
+      </li>
+    </ul>
+  </li>
+</ul>
