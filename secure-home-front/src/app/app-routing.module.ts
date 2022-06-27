@@ -7,6 +7,7 @@ import { DevicesComponent } from './devices/devices.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ReportComponent } from './report/report.component';
+import { UserMessagesComponent } from './user-messages/user-messages.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       expectedRoles: ['ROLE_ADMIN'],
+    },
+  },
+  {
+    path: 'messages',
+    component: UserMessagesComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRoles: ['ROLE_USER'],
     },
   },
   { path: 'login', component: LoginComponent },

@@ -1,7 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { LoginService } from '../login/services/login.service';
-import { LogoutService } from '../logout/services/logout.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  MenuItem
+} from 'primeng/api';
+import {
+  LoginService
+} from '../login/services/login.service';
+import {
+  LogoutService
+} from '../logout/services/logout.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,8 +20,7 @@ import { LogoutService } from '../logout/services/logout.service';
 export class NavbarComponent implements OnInit {
   role: string | null = '';
 
-  items: MenuItem[] = [
-    {
+  items: MenuItem[] = [{
       label: 'All messages',
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/all-messages',
@@ -46,6 +54,12 @@ export class NavbarComponent implements OnInit {
       icon: 'pi pi-fw pi-sign-in',
       routerLink: '/login',
     },
+    {
+      label: 'Messages',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/messages',
+      visible: this.role === 'ROLE_USER',
+    },
   ];
 
   constructor(
@@ -64,16 +78,13 @@ export class NavbarComponent implements OnInit {
     this.role = sessionStorage.getItem('role');
 
     if (this.role === '') {
-      this.items = [
-        {
-          label: 'Login',
-          icon: 'pi pi-fw pi-sign-in',
-          routerLink: '/login',
-        },
-      ];
+      this.items = [{
+        label: 'Login',
+        icon: 'pi pi-fw pi-sign-in',
+        routerLink: '/login',
+      }, ];
     } else {
-      this.items = [
-        {
+      this.items = [{
           label: 'All messages',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/all-messages',
@@ -98,22 +109,26 @@ export class NavbarComponent implements OnInit {
           visible: this.role === 'ROLE_USER',
         },
         {
+          label: 'Messages',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/messages',
+          visible: this.role === 'ROLE_USER',
+        },
+        {
           label: 'Logout',
           icon: 'pi pi-fw pi-sign-out',
           routerLink: '/logout',
-        },
+        }
       ];
     }
   };
 
   setLogoutItems = () => {
-    this.items = [
-      {
-        label: 'Login',
-        icon: 'pi pi-fw pi-sign-in',
-        routerLink: '/login',
-      },
-    ];
+    this.items = [{
+      label: 'Login',
+      icon: 'pi pi-fw pi-sign-in',
+      routerLink: '/login',
+    }, ];
   };
 
   ngOnInit(): void {
