@@ -19,7 +19,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PasswordModule } from 'primeng/password';
 import { TokenInterceptorInterceptor } from './token-interceptor.interceptor';
 import { CalendarModule } from 'primeng/calendar';
-
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { AppComponent } from './app.component';
 import { DeviceAlarmsComponent } from './device-alarms/device-alarms.component';
 import { DevicesComponent } from './devices/devices.component';
@@ -28,6 +29,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AllMessagesComponent } from './all-messages/all-messages.component';
 import { ReportComponent } from './report/report.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 import { UserMessagesComponent } from './user-messages/user-messages.component';
 
 @NgModule({
@@ -40,6 +42,7 @@ import { UserMessagesComponent } from './user-messages/user-messages.component';
     NavbarComponent,
     AllMessagesComponent,
     ReportComponent,
+    NotificationsComponent,
     UserMessagesComponent,
   ],
   imports: [
@@ -61,6 +64,8 @@ import { UserMessagesComponent } from './user-messages/user-messages.component';
     DropdownModule,
     PasswordModule,
     CalendarModule,
+    MessagesModule,
+    MessageModule,
   ],
   providers: [
     {
