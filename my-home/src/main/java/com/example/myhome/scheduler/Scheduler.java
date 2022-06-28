@@ -4,13 +4,22 @@ import com.example.myhome.domain.*;
 import com.example.myhome.repository.DeviceAlarmRepository;
 import com.example.myhome.repository.DeviceRepository;
 import com.example.myhome.repository.MessageRepository;
+import com.example.myhome.service.RuleService;
 import com.example.myhome.service.WebSocketService;
+
+import org.drools.core.impl.InternalKnowledgeBase;
+import org.drools.core.impl.KnowledgeBaseFactory;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.KieModule;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderErrors;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -54,6 +63,9 @@ public class Scheduler {
 
     @Autowired
     private WebSocketService webSocketService;
+    
+    @Autowired
+    private RuleService ruleService;
 
     private final KieServices kieServices = KieServices.Factory.get();
 
@@ -64,6 +76,43 @@ public class Scheduler {
         kb.buildAll();
         KieModule kieModule = kb.getKieModule();
         return kieServices.newKieContainer(kieModule.getReleaseId());
+    }
+    
+    private DroolsDTO doRules(String path, int seconds) {
+    	String rules = ruleService.rulesString();
+    	System.out.println(rules);
+    	KieSession kSession = null;
+        DroolsDTO fdRequest = new DroolsDTO();
+
+        try {
+            KnowledgeBuilder kb = KnowledgeBuilderFactory.newKnowledgeBuilder();
+            kb.add(ResourceFactory.newByteArrayResource(rules.getBytes("utf-8")), ResourceType.DRL);
+
+            KnowledgeBuilderErrors errors = kb.getErrors();
+            for (KnowledgeBuilderError error : errors) {
+                System.out.println(error);
+            }
+            InternalKnowledgeBase kBase = KnowledgeBaseFactory.newKnowledgeBase();
+            
+            fdRequest.setDeviceType(path);
+            fdRequest.setValue(seconds);
+            
+            kBase.addPackages(kb.getKnowledgePackages());
+            kSession = kBase.newKieSession();
+            kSession.insert(fdRequest);
+            kSession.fireAllRules();
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            
+        } finally {
+            if (kSession != null) {
+                kSession.dispose();
+            }
+
+        }
+        return fdRequest;
+
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -127,13 +176,8 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[4]);
 
-                KieSession kieSession = getKieContainer().newKieSession();
-                DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType(path);
-                fdRequest.setValue(seconds);
-                kieSession.insert(fdRequest);
-                kieSession.fireAllRules();
-                kieSession.dispose();
+                DroolsDTO fdRequest = doRules(path, seconds);
+
                 System.out.println("USAO SAM OVDE NE doorlock dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){
@@ -153,13 +197,7 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[2]);
 
-                KieSession kieSession = getKieContainer().newKieSession();
-                DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType(path);
-                fdRequest.setValue(seconds);
-                kieSession.insert(fdRequest);
-                kieSession.fireAllRules();
-                kieSession.dispose();
+                DroolsDTO fdRequest = doRules(path, seconds);
                 System.out.println("USAO SAM OVDE NE refrigerator dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){
@@ -179,13 +217,8 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = getKieContainer().newKieSession();
-                DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType(path);
-                fdRequest.setValue(seconds);
-                kieSession.insert(fdRequest);
-                kieSession.fireAllRules();
-                kieSession.dispose();
+                DroolsDTO fdRequest = doRules(path, seconds);
+
                 System.out.println("USAO SAM OVDE NE airconditioner dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){
@@ -206,13 +239,7 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = getKieContainer().newKieSession();
-                DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType(path);
-                fdRequest.setValue(seconds);
-                kieSession.insert(fdRequest);
-                kieSession.fireAllRules();
-                kieSession.dispose();
+                DroolsDTO fdRequest = doRules(path, seconds);
                 System.out.println("USAO SAM OVDE NE dishwasher dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){
@@ -232,13 +259,7 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = getKieContainer().newKieSession();
-                DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType(path);
-                fdRequest.setValue(seconds);
-                kieSession.insert(fdRequest);
-                kieSession.fireAllRules();
-                kieSession.dispose();
+                DroolsDTO fdRequest = doRules(path, seconds);
                 System.out.println("USAO SAM OVDE NE door dto: " + path + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){

@@ -29,27 +29,22 @@ public class RuleService {
 	private String RuleString(Rule rule) {
 		String r = "rule \""+rule.getDevice().getId()+"\"\r\n"
 				+ "    when\r\n"
-				+ "        dto : DroolsDTO( deviceType==\"DOOR\" && (value >= "+rule.getUpperValue()+"  || value <="+rule.getLowerValue()+");\r\n"
+				+ "        dto : DroolsDTO( deviceType==\""+rule.getDevice().getPathToFile()+"\" && (value >= "+rule.getUpperValue()+"  || value <="+rule.getLowerValue()+"));\r\n"
 				+ "    then\r\n"
 				+ "        dto.setAlarm(true);\r\n"
 				+ "end;\r\n";
 		return r;
 	}
-
-	private void writeAllRules() throws IOException {
+	
+	public String rulesString() {
 		List<Rule> rules = ruleRepository.findAll();
-		BufferedWriter writer = new BufferedWriter(new PrintWriter("./src/main/resources/rules.drl"));
         String ruleString = "import  com.example.myhome.domain.*;\r\n";
 		for (Rule rule : rules) {
 			ruleString += RuleString(rule);
 		}
-		
-		writer.write(ruleString);
-
-        writer.close();
+		return ruleString;
 	}
-	
-	
+		
 	private Device findDevice(Long id) {
 		return deviceRepository.findById(id).orElseThrow();
 	}
@@ -64,17 +59,14 @@ public class RuleService {
 			newRule.setDevice(device);
 			newRule.setLowerValue(ruleDTO.getLowerValue());
 			newRule.setUpperValue(ruleDTO.getUpperValue());
-			System.out.println("NE POSTOJI UREDJAJJJJ");
 		} else {
 			newRule = rule.get();
 			newRule.setLowerValue(ruleDTO.getLowerValue());
 			newRule.setUpperValue(ruleDTO.getUpperValue());
-			System.out.println("IPAK POSTOJI UREDJAJJJJ");
 
 		}
 		device.setRule(newRule);
 		deviceRepository.save(device);
-		writeAllRules();
 
 		
 	}
