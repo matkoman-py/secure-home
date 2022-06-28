@@ -80,7 +80,7 @@ public class UserService {
 	}
 	
 	public List<EstateDTO> getAllEstates() {
-		return estateRepository.findAll().stream().map(e -> new EstateDTO(e)).toList();
+		return estateRepository.findAll().stream().map(e -> new EstateDTO(e)).collect(Collectors.toList());
 	}
 	
 
@@ -96,7 +96,7 @@ public class UserService {
 	public List<UserDTO> findAll(String search) throws AccessDeniedException {
 		List<User> users = userRepository.search(search.trim().toLowerCase());
 		System.out.println(users.size() + " DASDAASD");
-		return users.stream().map(u -> new UserDTO(u)).toList();
+		return users.stream().map(u -> new UserDTO(u)).collect(Collectors.toList());
 	}
 
 	public User save(UserRequestDTO userRequest) {
