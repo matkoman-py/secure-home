@@ -75,11 +75,17 @@ public class DeviceService {
 
         List<Device> devices = getDevicesForUser();
         List<Message> messagesFromDevices = new ArrayList<>();
+        devices = devices.stream().filter(dev -> dev.getPathToFile().startsWith(pathToFile)).collect(Collectors.toList());
+
         for(Device d : devices){
-            messagesFromDevices.addAll(messageRepository.search(dateAfter, dateBefore, message, d.getId(), pathToFile));
+            messagesFromDevices.addAll(messageRepository.search(dateAfter, dateBefore, message, d.getPathToFile()));
         }
-        return messagesFromDevices.stream().map(m -> new MessageDTO(m.getId(), m.getDate(),
-				m.getMessage(), m.getDevice().getType(), m.getDevice().getEstate().getAddress())).collect(Collectors.toList());
+
+        return messagesFromDevices.stream().map(m -> {
+            Device d = deviceRepository.findByPathToFile(m.getDevice()).get();
+            return new MessageDTO(m.getId(), m.getDate(),
+                    m.getMessage(), d.getType(), d.getEstate().getAddress());
+        }).collect(Collectors.toList());
     }
 
     public List<DeviceAlarmDTO> getAllAlarmsForUser() {

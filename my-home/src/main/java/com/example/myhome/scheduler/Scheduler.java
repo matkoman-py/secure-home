@@ -5,8 +5,13 @@ import com.example.myhome.repository.DeviceAlarmRepository;
 import com.example.myhome.repository.DeviceRepository;
 import com.example.myhome.repository.MessageRepository;
 import com.example.myhome.service.WebSocketService;
+import org.kie.api.KieServices;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.builder.KieModule;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -44,12 +49,22 @@ public class Scheduler {
     @Autowired
     private TaskScheduler executor;
 
-    @Autowired
-    private KieContainer kieContainer;
+//    @Autowired
+//    private KieContainer kieContainer;
 
     @Autowired
     private WebSocketService webSocketService;
 
+    private final KieServices kieServices = KieServices.Factory.get();
+
+    public KieContainer getKieContainer() {
+        KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+        kieFileSystem.write(ResourceFactory.newClassPathResource("rules.drl"));
+        KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
+        kb.buildAll();
+        KieModule kieModule = kb.getKieModule();
+        return kieServices.newKieContainer(kieModule.getReleaseId());
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void setUpTasks() throws IOException {
@@ -112,9 +127,9 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[4]);
 
-                KieSession kieSession = kieContainer.newKieSession();
+                KieSession kieSession = getKieContainer().newKieSession();
                 DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType("DOORLOCK");
+                fdRequest.setDeviceType(path);
                 fdRequest.setValue(seconds);
                 kieSession.insert(fdRequest);
                 kieSession.fireAllRules();
@@ -138,9 +153,9 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[2]);
 
-                KieSession kieSession = kieContainer.newKieSession();
+                KieSession kieSession = getKieContainer().newKieSession();
                 DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType("REFRIGERATOR");
+                fdRequest.setDeviceType(path);
                 fdRequest.setValue(seconds);
                 kieSession.insert(fdRequest);
                 kieSession.fireAllRules();
@@ -164,9 +179,9 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = kieContainer.newKieSession();
+                KieSession kieSession = getKieContainer().newKieSession();
                 DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType("AIR_CONDITIONER");
+                fdRequest.setDeviceType(path);
                 fdRequest.setValue(seconds);
                 kieSession.insert(fdRequest);
                 kieSession.fireAllRules();
@@ -191,9 +206,9 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = kieContainer.newKieSession();
+                KieSession kieSession = getKieContainer().newKieSession();
                 DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType("DISHWASHER");
+                fdRequest.setDeviceType(path);
                 fdRequest.setValue(seconds);
                 kieSession.insert(fdRequest);
                 kieSession.fireAllRules();
@@ -217,14 +232,14 @@ public class Scheduler {
                 String[] split = s.get(0).split(" ");
                 Integer seconds = Integer.parseInt(split[3]);
 
-                KieSession kieSession = kieContainer.newKieSession();
+                KieSession kieSession = getKieContainer().newKieSession();
                 DroolsDTO fdRequest = new DroolsDTO();
-                fdRequest.setDeviceType("DOOR");
+                fdRequest.setDeviceType(path);
                 fdRequest.setValue(seconds);
                 kieSession.insert(fdRequest);
                 kieSession.fireAllRules();
                 kieSession.dispose();
-                System.out.println("USAO SAM OVDE NE door dto: " + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
+                System.out.println("USAO SAM OVDE NE door dto: " + path + Arrays.toString(split) + " is alarm: " + fdRequest.isAlarm());
 
                 if(fdRequest.isAlarm()){
                     DeviceAlarm alarm = new DeviceAlarm();
@@ -243,7 +258,7 @@ public class Scheduler {
 
             Message message = new Message();
             message.setMessage(s.get(0));
-            message.setDevice(dev);
+            message.setDevice(dev.getPathToFile());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date=dateFormat.parse(s.get(1));
             message.setDate(date);

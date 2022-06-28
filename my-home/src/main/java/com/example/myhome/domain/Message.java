@@ -15,9 +15,9 @@ public class Message {
     private String id;
     private Date date;
     private String message;
-    private Device device;
+    private String device;
 
-    public Message(String id, Date date, String message, String sourceApp, Device device) {
+    public Message(String id, Date date, String message, String sourceApp, String device) {
         this.id = id;
         this.date = date;
         this.message = message;
@@ -48,11 +48,11 @@ public class Message {
         this.message = message;
     }
 
-    public Device getDevice() {
+    public String getDevice() {
         return device;
     }
 
-    public void setDevice(Device device) {
+    public void setDevice(String device) {
         this.device = device;
     }
 

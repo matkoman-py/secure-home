@@ -10,6 +10,8 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import siitnocu.bezbednost.data.Device;
@@ -17,6 +19,8 @@ import siitnocu.bezbednost.data.Rule;
 import siitnocu.bezbednost.data.RuleDTO;
 import siitnocu.bezbednost.repositories.DeviceRepository;
 import siitnocu.bezbednost.repositories.RuleRepository;
+
+import javax.annotation.PostConstruct;
 
 @Service
 public class RuleService {
@@ -28,15 +32,17 @@ public class RuleService {
 	private DeviceRepository deviceRepository;    
 	
 	private String RuleString(Rule rule) {
+
 		String r = "rule \""+rule.getDevice().getId()+"\"\r\n"
 				+ "    when\r\n"
-				+ "        dto : DroolsDTO( deviceType==\"DOOR\" && (value >= "+rule.getUpperValue()+"  || value <="+rule.getLowerValue()+");\r\n"
+				+ "        dto : DroolsDTO( deviceType==\""+rule.getDevice().getPathToFile()+"\" && (value >= "+rule.getUpperValue()+"  || value <="+rule.getLowerValue()+"));\r\n"
 				+ "    then\r\n"
 				+ "        dto.setAlarm(true);\r\n"
 				+ "end;\r\n";
 		return r;
 	}
 
+	@EventListener(ApplicationReadyEvent.class)
 	private void writeAllRules() throws IOException {
 		List<Rule> rules = ruleRepository.findAll();
 		BufferedWriter writer = new BufferedWriter(new PrintWriter("../my-home/src/main/resources/rules.drl"));

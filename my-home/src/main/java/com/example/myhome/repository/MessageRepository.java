@@ -10,7 +10,6 @@ import java.util.List;
 public interface MessageRepository extends MongoRepository<Message, String> {
     @Query("{'date' : { $gt : ?0, $lt: ?1 }, " +
             "'message' : { '$regex' : ?2 , $options: 'i'}, " +
-            "'device.id': ?3,  " +
-            "'device.pathToFile' : { '$regex' : ?4 , $options: 'i'}}")
-    List<Message> search(Date after, Date before, String message, Long deviceId, String pathToFile);
+            "'device' : { '$regex' : ?3 , $options: 'i'}}")
+    List<Message> search(Date after, Date before, String message, String device);
 }
