@@ -5,9 +5,3 @@ rule "1"
     then
         dto.setAlarm(true);
 end;
-rule "2"
-    when
-        dto : DroolsDTO( deviceType=="door2" && (value >= 8.0  || value <=3.0));
-    then
-        dto.setAlarm(true);
-end;
