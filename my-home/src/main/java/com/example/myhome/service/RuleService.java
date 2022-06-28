@@ -63,7 +63,6 @@ public class RuleService {
 			newRule = rule.get();
 			newRule.setLowerValue(ruleDTO.getLowerValue());
 			newRule.setUpperValue(ruleDTO.getUpperValue());
-
 		}
 		device.setRule(newRule);
 		deviceRepository.save(device);

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AlarmsDeviceComponent } from './alarms-device/alarms-device.component';
+import { AlarmsSystemComponent } from './alarms-system/alarms-system.component';
 import { AuthGuard } from './app-routing/auth.guard';
 import { ApproveUserRequestComponent } from './approve-user-request/approve-user-request.component';
 import { CertificateInfoComponent } from './certificate-info/certificate-info.component';
@@ -98,7 +99,7 @@ const routes: Routes = [
   },
   {
     path: 'alarms-system',
-    component: AlarmsDeviceComponent,
+    component: AlarmsSystemComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRoles: ['ROLE_ADMIN'],

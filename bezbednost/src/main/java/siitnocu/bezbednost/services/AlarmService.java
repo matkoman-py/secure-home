@@ -2,6 +2,8 @@ package siitnocu.bezbednost.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import siitnocu.bezbednost.data.SystemAlarm;
 import siitnocu.bezbednost.dto.DeviceAlarmDTO;
 import siitnocu.bezbednost.repositories.DeviceAlarmRepository;
@@ -10,6 +12,7 @@ import siitnocu.bezbednost.repositories.SystemAlarmRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class AlarmService {
 

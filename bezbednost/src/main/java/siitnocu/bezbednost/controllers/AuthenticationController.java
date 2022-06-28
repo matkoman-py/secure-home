@@ -110,7 +110,7 @@ public class AuthenticationController {
 			// String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly;
 			// Path=/; Secure"; // kasnije mozete probati da postavite i ostale atribute,
 			// ali tek nakon sto podesite https
-			String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
+			String cookie = "Fingerprint1=" + fingerprint + "; HttpOnly; Path=/";
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("Set-Cookie", cookie);

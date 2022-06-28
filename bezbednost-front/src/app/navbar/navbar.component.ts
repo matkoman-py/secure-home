@@ -134,21 +134,25 @@ export class NavbarComponent implements OnInit {
           label: 'Logs',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/logs',
+          visible: this.role === 'ROLE_ADMIN'
         },
         {
           label: 'Approve User',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/approve-user-request',
+          visible: this.role === 'ROLE_ADMIN'
         },
         {
           label: 'Device Alarms',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/alarms-device',
+          visible: this.role === 'ROLE_ADMIN'
         },
         {
           label: 'System Alarms',
           icon: 'pi pi-fw pi-sign-in',
           routerLink: '/alarms-system',
+          visible: this.role === 'ROLE_ADMIN'
         },
       ];
     }
