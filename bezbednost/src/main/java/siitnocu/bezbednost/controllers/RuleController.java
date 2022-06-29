@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,17 +25,20 @@ public class RuleController {
     private RuleService ruleService;
 	
 	@PostMapping
+    @PreAuthorize("hasAuthority('RULES')")
     public String postRule(@RequestBody RuleDTO rule) throws IOException {
         ruleService.addRule(rule);
         return "OK";
     }
 	
 	@GetMapping
+    @PreAuthorize("hasAuthority('RULES')")
     public List<RulePreviewDTO> getRules() throws IOException {
         return ruleService.getRules();
     }
 	
 	@GetMapping(value = "/devices")
+    @PreAuthorize("hasAuthority('RULES')")
     public List<DeviceDTO> getDeviceDTOs() throws IOException {
         return ruleService.getDevices();
     }
