@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { LogsComponent } from './logs/logs.component';
 import { RevokedCertsComponent } from './revoked-certs/revoked-certs.component';
+import { RuleComponent } from './rule/rule.component';
 import { UserEstatesComponent } from './user-estates/user-estates.component';
 
 const routes: Routes = [
@@ -84,6 +85,14 @@ const routes: Routes = [
   {
     path: 'revoked-certificates',
     component: RevokedCertsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      expectedRoles: ['ROLE_ADMIN'],
+    },
+  },
+  {
+    path: 'rules',
+    component: RuleComponent,
     canActivate: [AuthGuard],
     data: {
       expectedRoles: ['ROLE_ADMIN'],

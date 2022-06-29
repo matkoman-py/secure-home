@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import siitnocu.bezbednost.data.Device;
 import siitnocu.bezbednost.data.Rule;
 import siitnocu.bezbednost.data.RuleDTO;
+import siitnocu.bezbednost.dto.DeviceDTO;
+import siitnocu.bezbednost.dto.RulePreviewDTO;
 import siitnocu.bezbednost.repositories.DeviceRepository;
 import siitnocu.bezbednost.repositories.RuleRepository;
 
@@ -40,6 +42,14 @@ public class RuleService {
 				+ "        dto.setAlarm(true);\r\n"
 				+ "end;\r\n";
 		return r;
+	}
+	
+	public List<DeviceDTO> getDevices() {
+		return deviceRepository.findAll().stream().map(d -> new DeviceDTO(d)).toList();
+	}
+	
+	public List<RulePreviewDTO> getRules() {
+		return ruleRepository.findAll().stream().map(r -> new RulePreviewDTO(r)).toList();
 	}
 
 	@EventListener(ApplicationReadyEvent.class)

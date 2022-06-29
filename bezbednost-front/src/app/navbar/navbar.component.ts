@@ -119,11 +119,7 @@ export class NavbarComponent implements OnInit {
           routerLink: '/revoked-certificates',
           visible: this.role === 'ROLE_ADMIN',
         },
-        {
-          label: 'Logout',
-          icon: 'pi pi-fw pi-sign-out',
-          routerLink: '/logout',
-        },
+        
         {
           label: 'Users',
           icon: 'pi pi-fw pi-sign-in',
@@ -154,6 +150,17 @@ export class NavbarComponent implements OnInit {
           routerLink: '/alarms-system',
           visible: this.role === 'ROLE_ADMIN'
         },
+        {
+          label: 'Rules',
+          icon: 'pi pi-fw pi-sign-in',
+          routerLink: '/rules',
+          visible: this.role === 'ROLE_ADMIN'
+        },
+        {
+          label: 'Logout',
+          icon: 'pi pi-fw pi-sign-out',
+          routerLink: '/logout',
+        }
       ];
     }
   };

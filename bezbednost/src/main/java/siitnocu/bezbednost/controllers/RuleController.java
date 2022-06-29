@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import siitnocu.bezbednost.data.RuleDTO;
+import siitnocu.bezbednost.dto.DeviceDTO;
+import siitnocu.bezbednost.dto.RulePreviewDTO;
 import siitnocu.bezbednost.services.RuleService;
 
 @RestController
@@ -25,6 +27,16 @@ public class RuleController {
     public String postRule(@RequestBody RuleDTO rule) throws IOException {
         ruleService.addRule(rule);
         return "OK";
+    }
+	
+	@GetMapping
+    public List<RulePreviewDTO> getRules() throws IOException {
+        return ruleService.getRules();
+    }
+	
+	@GetMapping(value = "/devices")
+    public List<DeviceDTO> getDeviceDTOs() throws IOException {
+        return ruleService.getDevices();
     }
 
 }

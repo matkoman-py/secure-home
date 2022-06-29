@@ -1,0 +1,35 @@
+<p-toast position="top-center" key="tc"></p-toast>
+
+<div class="center">
+    <p-dropdown [options]="devices" [(ngModel)]="device" placeholder="Select a device" optionLabel="pathFile" [showClear]="true"></p-dropdown>
+    <br>
+    <br>
+    <p-inputNumber [(ngModel)]="lowerValue"  mode="decimal" placeholder="Select a lower value" [minFractionDigits]="0" [maxFractionDigits]="5">
+    </p-inputNumber>
+    <br>
+    <br>
+    <p-inputNumber [(ngModel)]="upperValue"  mode="decimal" placeholder="Select an upper value" [minFractionDigits]="0" [maxFractionDigits]="5">
+    </p-inputNumber>
+    <br>
+    <br>
+    <p-button label="Click" (onClick)="postRule()"></p-button>
+</div>
+
+<p-table [value]="rules" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Id</th>
+            <th>Device</th>
+            <th>Lower value</th>
+            <th>Upper value</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rule>
+        <tr>
+            <td >{{rule.id}}</td>
+            <td>{{rule.device}}</td>
+            <td>{{rule.lowerValue}}</td>
+            <td>{{rule.upperValue}}</td>
+        </tr>
+    </ng-template>
+</p-table>
